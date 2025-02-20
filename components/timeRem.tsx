@@ -27,7 +27,7 @@ export const TimeRem = () => {
         <View style={styles.icon}>
         <MaterialIcons name="access-alarm" size={40} color={colors.text} />
         <View style={{flexDirection:'column'}}>
-        <Text style={styles.text}>Bedtime</Text>
+        <Text style={styles.text}>Wake Up</Text>
         <Text style={styles.time}>8:00PM</Text>
         </View>
         </View>
@@ -61,11 +61,11 @@ const styles = StyleSheet.create({
     gap:8
   },
   text:{
-    fontSize:16,
+    fontSize:14,
     color:colors.text
   },
   time:{
-    fontSize:20,
+    fontSize:16,
     fontWeight:'bold',
     color:colors.text
   },

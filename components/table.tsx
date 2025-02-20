@@ -16,7 +16,7 @@ const Table = ({heading,list}:TableProps) => {
         <View>
             {
                 list.map((item,index)=>(
-                    <View>
+                    <View key={index}>
                     <View key={index} style={styles.table}>
                         <Text style={{color:colors.text}}>{item.title}</Text>
                         <Text style={{color:colors.text}}>{item.time}</Text>
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
      container: {
         padding:20,
         width:'100%',
-        marginTop:10,
+        marginTop:15,
         backgroundColor:colors.background,
         borderRadius:10,
         borderColor:colors.border,
