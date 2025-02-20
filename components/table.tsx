@@ -3,29 +3,12 @@ import React from 'react'
 import { colors } from '../utils/colors'
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-const list = [
-    {
-        title:"Read a book",
-        time:"30 mins"
-    },
-    {
-        title:"Worked on some stuff",
-        time:"50 mins"
-    },
-    {
-        title:"did some DSA",
-        time:"30 mins"
-    },
-    {
-        title:"Annoyed Anurag",
-        time:"60 mins"
-    },
-]
-const Table = () => {
+
+const Table = ({heading,list}:TableProps) => {
   return (
     <View style={styles.container}>
         <View style={styles.headingContainer}>
-            <Text style={styles.heading}>What Have I Done Today</Text>
+            <Text style={styles.heading}>{heading}</Text>
             <TouchableOpacity>
                 <AntDesign name="pluscircle" size={24} color={colors.primary} />
             </TouchableOpacity>
@@ -68,10 +51,12 @@ const styles = StyleSheet.create({
       },
       heading:{
             fontSize:18,
-            color:colors.text
+            color:colors.text,
+            marginBottom:10
       },
       table:{
         flexDirection:'row',
         justifyContent:'space-between',
-        marginTop:10}
+        marginTop:10
+    }
 })
