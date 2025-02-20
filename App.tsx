@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { TimeRem } from './components/timeRem';
+import Table from './components/table';
 
 export default function App() {
   return (
@@ -8,6 +9,7 @@ export default function App() {
       <StatusBar style="auto" />
       <View style={styles.container}>
         <TimeRem/>
+        <Table/>
       </View>
     </SafeAreaView>
   );
