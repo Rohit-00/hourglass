@@ -60,7 +60,7 @@ export default function App() {
             ref={bottomSheetModalRef}
           >
           <BottomSheetView style={styles.contentContainer}>
-              <ChangeTimeForm/>
+              <ChangeTimeForm bottomSheetModalRef={bottomSheetModalRef}/>
 
             </BottomSheetView>
         </BottomSheetModal>

@@ -5,9 +5,7 @@ import Fontisto from '@expo/vector-icons/Fontisto';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Entypo from '@expo/vector-icons/Entypo';
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { BottomSheetView } from "@gorhom/bottom-sheet";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useCallback } from "react";
 
 interface ChildProps {
