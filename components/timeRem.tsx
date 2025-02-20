@@ -1,13 +1,19 @@
-import { View , Text, StyleSheet} from "react-native"
+import { View , Text, StyleSheet, TouchableOpacity} from "react-native"
 import CircularProgress from "./circle"
 import { colors } from "../utils/colors";
 import Fontisto from '@expo/vector-icons/Fontisto';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Entypo from '@expo/vector-icons/Entypo';
 export const TimeRem = () => { 
 
     return(
         <View style={styles.container}>
-        <CircularProgress size={220} progress={50} progressColor={colors.primary} backgroundColor={colors.border}/>
+        <View style={styles.edit}>
+        <TouchableOpacity>
+        <Entypo name="dots-three-horizontal" size={24} color="black" />
+        </TouchableOpacity>
+        </View>
+        <CircularProgress size={240} progress={50} progressColor={colors.primary} backgroundColor={colors.border}/>
         
         <View style={styles.iconContainer}>
         <View style={styles.icon}>
@@ -35,7 +41,6 @@ export const TimeRem = () => {
 const styles = StyleSheet.create({
   container: {
     padding:20,
-    
     width:'100%',
     marginTop:50,
     backgroundColor:colors.background,
@@ -63,5 +68,9 @@ const styles = StyleSheet.create({
     fontSize:20,
     fontWeight:'bold',
     color:colors.text
+  },
+  edit:{
+    width:'100%',
+    alignItems:'flex-end'
   }
 });
