@@ -34,3 +34,105 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+# Node modules
+node_modules/
+package-lock.json
+yarn.lock
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build files
+build/
+dist/
+
+# Metro Bundler
+.cache/
+logs/
+
+# iOS files
+ios/Pods/
+ios/build/
+ios/*.xcodeproj/project.xcworkspace/
+ios/*.xcworkspace/
+ios/.DS_Store
+ios/DerivedData/
+ios/.expo/
+
+# Android files
+android/.gradle/
+android/app/build/
+android/build/
+android/.idea/
+android/local.properties
+android/.cxx/
+android/.settings/
+android/.externalNativeBuild/
+android/gradle.properties
+android/captures/
+
+# Environment variables & secrets
+.env
+.env.*
+
+# IDE-specific files
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Gradle & Java/Kotlin files
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+*.log
+*.keystore
+
+# React Native specific
+*.pbxproj
+xcuserdata/
+*.xcuserstate
+
+# Expo specific (if using Expo)
+.expo/
+.expo-shared/
