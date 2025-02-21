@@ -4,6 +4,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Entypo from '@expo/vector-icons/Entypo';
 import { useCallback, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { addTask } from "../database";
 
 interface ChildProps {
     bottomSheetModalRef: React.RefObject<BottomSheetModal>;
@@ -12,10 +13,16 @@ interface ChildProps {
 export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
     const [task, setTask] = useState('');
     const [time, setTime] = useState('');
+
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.close();
       }, []);
-
+    
+    const handleSubmit = async() => {
+        const data = await addTask(task,time)
+        console.log(data)
+        bottomSheetModalRef.current?.close();
+    }
     return(
         <View style={styles.container}>
         <Text style={styles.heading}>What have you done?</Text>
@@ -45,9 +52,9 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
                     <Text>Cancel</Text>
                 </View>
             </TouchableOpacity>
-            <View style={styles.updateButton}>
+            <TouchableOpacity style={styles.updateButton} onPress={handleSubmit}>
                 <Text>Add</Text>
-            </View>
+            </TouchableOpacity>
         </View>
         
         </View>

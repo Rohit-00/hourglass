@@ -10,8 +10,8 @@ export const createTable = async () => {
     return  db
 };
 
-export const addTask = async () => {
-    const result = await db.runAsync('INSERT INTO tasks (title, time) VALUES (?, ?)', 'aaa', '10');
+export const addTask = async (title:string,time:string) => {
+    const result = await db.runAsync('INSERT INTO tasks (title, time) VALUES (?, ?)', title, time);
     console.log(result.lastInsertRowId, result.changes);
 }
 
