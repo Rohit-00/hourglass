@@ -9,6 +9,7 @@ import { ChangeTimeForm } from "./components/changeTimeForm";
 import { AddTask } from "./components/addTask";
 import { addTask, createTable, getTasks } from "./database";
 import { TasksProvider } from "./store/tasksContext";
+import { TimeProvider } from "./store/timeContext";
 
 const list: Tasks[] = [
   {
@@ -55,6 +56,7 @@ export default function App() {
 
 
   return (
+    <TimeProvider> 
     <TasksProvider>
     <GestureHandlerRootView style={styles.safeArea}>
       <SafeAreaView>
@@ -89,6 +91,7 @@ export default function App() {
 
     </GestureHandlerRootView>
     </TasksProvider>
+    </TimeProvider>
     
   );
 }

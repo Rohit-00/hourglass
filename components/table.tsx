@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { colors } from '../utils/colors'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { getTasks } from '../database';
 import { useTasks } from '../store/tasksContext';
 
 interface ChildProps {
@@ -18,8 +17,8 @@ interface ChildProps {
   
 const Table = ({heading,list,bottomSheetModalRef,sendFunctionsToParent}:ChildProps) => {
 
-  // const [tasks , setTasks] = useState<Tasks[]>()
   const {tasks} = useTasks()
+  
   // Define functions inside child
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
