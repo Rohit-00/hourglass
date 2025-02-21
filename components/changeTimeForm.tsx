@@ -2,16 +2,22 @@ import { View, Text, TextInput , StyleSheet, TouchableOpacity} from "react-nativ
 import { colors } from "../utils/colors"
 import Fontisto from '@expo/vector-icons/Fontisto';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTime } from "../store/timeContext";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface ChildProps {
     bottomSheetModalRef: React.RefObject<BottomSheetModal>;
   }
+
+
 export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
 
-    const { setBedtime, setWakeupTime } = useTime();
+    const [showBedtimePicker, setShowBedtimePicker] = useState(false);
+    const [showWakeupPicker, setShowWakeupPicker] = useState(false);
+
+    const { setBedtime, setWakeupTime, fetchTimes,bedtime,wakeupTime } = useTime();
     const [bedtimeInput, setBedtimeInput] = useState('');
     const [wakeupTimeInput, setWakeupTimeInput] = useState('');
 
@@ -24,29 +30,60 @@ export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
         await setWakeupTime(wakeupTimeInput);
         bottomSheetModalRef.current?.close();
     };
+
+
     return (
         <View style={styles.container}>
             <Text style={styles.heading}>Change Time Form</Text>
             
-            <View style={styles.inputContainer}>
-            <TextInput 
-            style={styles.input} 
-            placeholder="Time" 
-            value={bedtimeInput} 
-            onChangeText={setBedtimeInput} 
-            />
+            <TouchableOpacity style={styles.inputContainer} onPress={()=>setShowBedtimePicker(true)}>
+            <Text 
+            style={styles.placeholder} 
+            
+            >
+                {bedtimeInput?bedtimeInput:'Bedtime'}
+                </Text>
+            {showBedtimePicker && (
+                <DateTimePicker
+                    value={new Date(bedtimeInput)}
+                    mode="time"
+                    is24Hour={false}
+                    display="default"
+                    onChange={(event, selectedDate) => {
+                        const currentDate = selectedDate || bedtimeInput;
+                        setShowBedtimePicker(false);
+                        setBedtimeInput(new Date(currentDate.toString().replace(/^"+|"+$/g, '')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
+                    }}
+                />
+            )}
             <Fontisto name="night-clear" size={20} color={colors.text} style={{opacity:0.7}}/>
-            </View>
+            </TouchableOpacity>
 
-            <View style={styles.inputContainer}>
-            <TextInput 
-            style={styles.input} 
-            placeholder="Time" 
-            value={wakeupTimeInput} 
-            onChangeText={setWakeupTimeInput} 
-            />
+            <TouchableOpacity style={styles.inputContainer} onPress={()=>setShowWakeupPicker(true)}>
+            <Text 
+            style={styles.placeholder} 
+            
+            >
+                {wakeupTimeInput?wakeupTimeInput:'Wake up time'}
+                </Text>
+            {showWakeupPicker && (
+                <DateTimePicker
+                    value={new Date(wakeupTimeInput)}
+                    mode="time"
+                    is24Hour={false}
+                    display="default"
+                    onChange={(event, selectedDate) => {
+                        const currentDate = selectedDate || wakeupTimeInput;
+                        setShowWakeupPicker(false);
+                        setWakeupTimeInput(new Date(currentDate.toString().replace(/^"+|"+$/g, '')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
+                    }}
+                />
+            )}
+           
+
                 <MaterialIcons name="access-alarm" size={26} color={colors.text} style={{opacity:0.7}}/>
-            </View>
+           
+            </TouchableOpacity>
             
         
         <View style={styles.buttonContainer}>
