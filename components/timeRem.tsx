@@ -7,6 +7,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useEffect } from "react";
 import { useCallback } from "react";
+import { useTime } from "../store/timeContext";
 
 interface ChildProps {
   bottomSheetModalRef: React.RefObject<BottomSheetModal>;
@@ -18,6 +19,7 @@ interface ChildProps {
 
 export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunctionsToParent}) => { 
 
+  const {fetchTimes,bedtime,wakeupTime} = useTime()
 
   // Define functions inside child
   const handlePresentModalPress = useCallback(() => {
@@ -32,6 +34,7 @@ export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunction
   // Send functions to parent when the component mounts
   useEffect(() => {
     sendFunctionsToParent({ handlePresentModalPress, handleSheetChanges });
+    fetchTimes()
   }, [sendFunctionsToParent, handlePresentModalPress, handleSheetChanges]);
 
     return(
@@ -50,7 +53,7 @@ export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunction
         <Fontisto name="night-clear" size={34} color={colors.text} />
         <View style={{flexDirection:'column'}}>
         <Text style={styles.text}>Bedtime</Text>
-        <Text style={styles.time}>8:00PM</Text>
+        <Text style={styles.time}>{bedtime}</Text>
         </View>
         </View>
 
@@ -58,7 +61,7 @@ export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunction
         <MaterialIcons name="access-alarm" size={40} color={colors.text} />
         <View style={{flexDirection:'column'}}>
         <Text style={styles.text}>Wake Up</Text>
-        <Text style={styles.time}>8:00PM</Text>
+        <Text style={styles.time}>{wakeupTime}</Text>
         </View>
         </View>
         </View>

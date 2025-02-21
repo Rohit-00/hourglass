@@ -2,30 +2,52 @@ import { View, Text, TextInput , StyleSheet, TouchableOpacity} from "react-nativ
 import { colors } from "../utils/colors"
 import Fontisto from '@expo/vector-icons/Fontisto';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useTime } from "../store/timeContext";
 
 interface ChildProps {
     bottomSheetModalRef: React.RefObject<BottomSheetModal>;
   }
 export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
-    
+
+    const { setBedtime, setWakeupTime } = useTime();
+    const [bedtimeInput, setBedtimeInput] = useState('');
+    const [wakeupTimeInput, setWakeupTimeInput] = useState('');
+
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.close();
       }, []);
 
+    const handleSaveTimes = async () => {
+        await setBedtime(bedtimeInput);
+        await setWakeupTime(wakeupTimeInput);
+        bottomSheetModalRef.current?.close();
+    };
     return (
         <View style={styles.container}>
             <Text style={styles.heading}>Change Time Form</Text>
             
-            <View style={styles.input}>
-                <Text  style={styles.placeholder}>Bedtime</Text>
-                <Fontisto name="night-clear" size={20} color={colors.text} style={{opacity:0.7}}/>
+            <View style={styles.inputContainer}>
+            <TextInput 
+            style={styles.input} 
+            placeholder="Time" 
+            value={bedtimeInput} 
+            onChangeText={setBedtimeInput} 
+            />
+            <Fontisto name="night-clear" size={20} color={colors.text} style={{opacity:0.7}}/>
             </View>
-            <View style={styles.input}>
-                <Text  style={styles.placeholder}>Wake Up Time</Text>
+
+            <View style={styles.inputContainer}>
+            <TextInput 
+            style={styles.input} 
+            placeholder="Time" 
+            value={wakeupTimeInput} 
+            onChangeText={setWakeupTimeInput} 
+            />
                 <MaterialIcons name="access-alarm" size={26} color={colors.text} style={{opacity:0.7}}/>
             </View>
+            
         
         <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handlePresentModalPress}>
@@ -33,9 +55,9 @@ export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
                 <Text>Cancel</Text>
             </View>
         </TouchableOpacity>
-            <View style={styles.updateButton}>
+            <TouchableOpacity style={styles.updateButton} onPress={handleSaveTimes}>
                 <Text>Update</Text>
-            </View>
+            </TouchableOpacity>
 
         </View>
             
@@ -58,14 +80,7 @@ const styles = StyleSheet.create({
     },
     input:{
         width:'100%',
-        borderBottomColor:colors.border,
-        borderBottomWidth:1,
-        flexDirection:'row',
-        justifyContent:'space-between',
-        alignItems:'center',
-        paddingBottom:10,
-        paddingHorizontal:5,
-        marginBottom:20
+ 
 
     },
     placeholder:{
@@ -94,6 +109,18 @@ const styles = StyleSheet.create({
         backgroundColor:colors.primary,
         alignItems:'center',
         justifyContent:'center'
+    },
+    inputContainer:{
+        width:'100%',
+        borderBottomColor:colors.border,
+        borderBottomWidth:1,
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center',
+        paddingBottom:10,
+        paddingHorizontal:5,
+        marginBottom:20,
+  
     }
 })
 
