@@ -1,15 +1,41 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { colors } from '../utils/colors'
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
+interface ChildProps {
+    bottomSheetModalRef: React.RefObject<BottomSheetModal>;
+    sendFunctionsToParent: (callbacks: {
+      handlePresentModalPress: () => void;
+      handleSheetChanges: (index: number) => void;
+    }) => void;
+    heading:string;
+    list: tasks[]
+  }
+  
+const Table = ({heading,list,bottomSheetModalRef,sendFunctionsToParent}:ChildProps) => {
 
-const Table = ({heading,list}:TableProps) => {
+      // Define functions inside child
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+    bottomSheetModalRef.current?.close();
+  }, []);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
+  // Send functions to parent when the component mounts
+  useEffect(() => {
+    sendFunctionsToParent({ handlePresentModalPress, handleSheetChanges });
+  }, [sendFunctionsToParent, handlePresentModalPress, handleSheetChanges]);
+
   return (
     <View style={styles.container}>
         <View style={styles.headingContainer}>
             <Text style={styles.heading}>{heading}</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handlePresentModalPress}>
                 <AntDesign name="pluscircle" size={24} color={colors.primary} />
             </TouchableOpacity>
         </View>

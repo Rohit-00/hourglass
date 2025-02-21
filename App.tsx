@@ -28,6 +28,7 @@ const list: tasks[] = [
 
 export default function App() {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const taskBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   // Store the modal open function instead of calling it directly
   const [handlePresentModalPress, setHandlePresentModalPress] = useState<(() => void) | null>(null);
@@ -40,7 +41,6 @@ export default function App() {
     setHandlePresentModalPress(() => callbacks.handlePresentModalPress);
   };
 
-  const snapPoints = useMemo(() => ["50%", "100%"], []);
 
   return (
     <GestureHandlerRootView style={styles.safeArea}>
@@ -49,8 +49,8 @@ export default function App() {
           <StatusBar style="auto" />
           <View style={styles.container}>
             <TimeRem bottomSheetModalRef={bottomSheetModalRef} sendFunctionsToParent={handleReceiveChildFunctions} />
-            <Table heading="What Have I Done Today" list={list} />
-            <Table heading="What Have I Done Yesterday" list={list} />
+            <Table heading="What Have I Done Today" list={list} bottomSheetModalRef={taskBottomSheetModalRef} sendFunctionsToParent={handleReceiveChildFunctions}/>
+            
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -63,7 +63,20 @@ export default function App() {
           </BottomSheetView>
         </BottomSheetModal>
       </BottomSheetModalProvider>
+
+
+      {/* Bottom Sheet for adding tasks */}
+      <BottomSheetModalProvider>
+        <BottomSheetModal ref={taskBottomSheetModalRef} aria-hidden>
+          <BottomSheetView style={styles.contentContainer}>
+           <Text>Hello</Text>
+          </BottomSheetView>
+        </BottomSheetModal>
+      </BottomSheetModalProvider>
+
     </GestureHandlerRootView>
+
+    
   );
 }
 
