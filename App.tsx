@@ -4,9 +4,10 @@ import { TimeRem } from "./components/timeRem";
 import Table from "./components/table";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChangeTimeForm } from "./components/changeTimeForm";
 import { AddTask } from "./components/addTask";
+import { addTask, createTable, getTasks } from "./database";
 
 const list: tasks[] = [
   {
@@ -28,6 +29,19 @@ const list: tasks[] = [
 ];
 
 export default function App() {
+
+
+  //initialize the databse
+  useEffect(()=>{
+    const initDB = async() => {
+      const ne = await createTable()
+      console.log(ne)
+      await getTasks()
+    }
+    initDB()
+
+  })
+
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const taskBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
