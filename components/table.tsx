@@ -1,8 +1,10 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { colors } from '../utils/colors'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { getTasks } from '../database';
+import { useTasks } from '../store/tasksContext';
 
 interface ChildProps {
     bottomSheetModalRef: React.RefObject<BottomSheetModal>;
@@ -11,12 +13,14 @@ interface ChildProps {
       handleSheetChanges: (index: number) => void;
     }) => void;
     heading:string;
-    list: tasks[]
+    list: Tasks[]
   }
   
 const Table = ({heading,list,bottomSheetModalRef,sendFunctionsToParent}:ChildProps) => {
 
-      // Define functions inside child
+  // const [tasks , setTasks] = useState<Tasks[]>()
+  const {tasks} = useTasks()
+  // Define functions inside child
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
     bottomSheetModalRef.current?.close();
@@ -29,8 +33,9 @@ const Table = ({heading,list,bottomSheetModalRef,sendFunctionsToParent}:ChildPro
   // Send functions to parent when the component mounts
   useEffect(() => {
     sendFunctionsToParent({ handlePresentModalPress, handleSheetChanges });
-  }, [sendFunctionsToParent, handlePresentModalPress, handleSheetChanges]);
+  }, [sendFunctionsToParent, handlePresentModalPress, handleSheetChanges,bottomSheetModalRef.current]);
 
+  console.log(tasks)
   return (
     <View style={styles.container}>
         <View style={styles.headingContainer}>
@@ -41,7 +46,7 @@ const Table = ({heading,list,bottomSheetModalRef,sendFunctionsToParent}:ChildPro
         </View>
         <View>
             {
-                list.map((item,index)=>(
+                tasks&&tasks.map((item,index)=>(
                     <View key={index}>
                     <View key={index} style={styles.table}>
                         <Text style={{color:colors.text}}>{item.title}</Text>

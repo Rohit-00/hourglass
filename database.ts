@@ -16,7 +16,7 @@ export const addTask = async (title:string,time:string) => {
 }
 
 export const getTasks = async() => {
-    const allRows:tasks[] = await db.getAllAsync('SELECT * FROM tasks');
+    const allRows:Tasks[] = await db.getAllAsync('SELECT * FROM tasks');
     return allRows
 }
 

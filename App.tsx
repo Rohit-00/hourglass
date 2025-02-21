@@ -8,8 +8,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChangeTimeForm } from "./components/changeTimeForm";
 import { AddTask } from "./components/addTask";
 import { addTask, createTable, getTasks } from "./database";
+import { TasksProvider } from "./store/tasksContext";
 
-const list: tasks[] = [
+const list: Tasks[] = [
   {
     title: "Read a book",
     time: "30 mins",
@@ -30,16 +31,12 @@ const list: tasks[] = [
 
 export default function App() {
 
-
   //initialize the databse
   useEffect(()=>{
     const initDB = async() => {
-      const ne = await createTable()
-      console.log(ne)
-      await getTasks()
+      await createTable()
     }
     initDB()
-
   })
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -58,6 +55,7 @@ export default function App() {
 
 
   return (
+    <TasksProvider>
     <GestureHandlerRootView style={styles.safeArea}>
       <SafeAreaView>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -90,7 +88,7 @@ export default function App() {
       </BottomSheetModalProvider>
 
     </GestureHandlerRootView>
-
+    </TasksProvider>
     
   );
 }

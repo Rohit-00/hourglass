@@ -1,9 +1,10 @@
-type tasks = {   
+type Tasks = {   
+    percentage?:string;
     title: string;  
     time: string;
 }
 
 type TableProps = {
     heading : string;
-    list : tasks[];
+    list : Tasks[];
 }

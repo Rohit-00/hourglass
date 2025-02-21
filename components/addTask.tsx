@@ -5,6 +5,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import { useCallback, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { addTask } from "../database";
+import { useTasks } from "../store/tasksContext";
 
 interface ChildProps {
     bottomSheetModalRef: React.RefObject<BottomSheetModal>;
@@ -13,14 +14,13 @@ interface ChildProps {
 export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
     const [task, setTask] = useState('');
     const [time, setTime] = useState('');
-
+    const { createTask } = useTasks();
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.close();
       }, []);
     
     const handleSubmit = async() => {
-        const data = await addTask(task,time)
-        console.log(data)
+        await createTask(task, time);
         bottomSheetModalRef.current?.close();
     }
     return(
