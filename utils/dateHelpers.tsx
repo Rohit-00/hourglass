@@ -42,26 +42,36 @@ function parseTime(timeStr: string): Date | null {
     parsedDate.setHours(hour, minute, 0, 0);
     return parsedDate;
 }
-export function convertTimeToDate(timeString: string): Date {
-    const [time, modifier] = timeString.split(" "); 
-    let [hours, minutes] = time.split(":").map(Number);
 
-    if (modifier === "PM" && hours !== 12) {
-        hours += 12;
-    } else if (modifier === "AM" && hours === 12) {
-        hours = 0;
-    }
+export function convertTimeDifferenceToNumber(timeDiff: string): number {
+    const match = timeDiff.match(/(\d+)\s*h?\s*(\d*)\s*m?/i);
     
-    const date: Date = new Date();
-    date.setHours(hours, minutes, 0, 0);
+    if (!match) return NaN;
 
-    return date;
+    const hours = parseInt(match[1], 10);
+    const minutes = match[2] ? parseInt(match[2], 10) : 0;
+
+    // Convert minutes into decimal (e.g., 12 minutes → 0.2)
+    const decimalMinutes = minutes / 60;
+
+    return parseFloat((hours + decimalMinutes).toFixed(2));
 }
 
-function formatTimeDifference(minutes: number): string {
-    const hours: number = Math.floor(minutes / 60);
-    const mins: number = minutes % 60;
-    return `${hours} hours ${mins} minutes`;
+export function getPercentage(wakeupTime:string,bedtime:string){
+    const totalWorkingTime = convertTimeDifferenceToNumber(timeDifference(wakeupTime,bedtime))
+
+    const now = new Date().toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit', 
+        hour12: true 
+    }).replace(/^0/, '');
+
+    const nowDiff = convertTimeDifferenceToNumber(timeDifference(now,bedtime))
+
+    return (Math.abs((nowDiff/totalWorkingTime)*100-100))
+
 }
+
+
 
 

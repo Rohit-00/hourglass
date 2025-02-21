@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Animated, StyleSheet, Easing } from 'react-native';
 import Svg, { Circle, G, Text } from 'react-native-svg';
 import { useTime } from '../store/timeContext';
-import { timeDifference } from '../utils/dateHelpers';
+import { getPercentage, timeDifference } from '../utils/dateHelpers';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -19,7 +19,13 @@ const center = size / 2;
 const radius = (size - strokeWidth) / 2;
 const circumference = 2 * Math.PI * radius;
 
-const {bedtime} = useTime()
+const [percentage,setPercentage] = useState<number>()
+const {bedtime,fetchTimes,wakeupTime} = useTime()
+
+useEffect(()=>{
+   fetchTimes()
+   bedtime&&wakeupTime&& setPercentage(getPercentage(wakeupTime,bedtime))
+},[bedtime,wakeupTime])
 
 // Animation value
 const progressAnimation = useRef(new Animated.Value(0)).current;
@@ -30,18 +36,18 @@ const now: string = new Date().toLocaleTimeString('en-US', {
     hour12: true 
 }).replace(/^0/, '');
 
-const diff = timeDifference(now,bedtime!)
-console.log(diff)
+const diff = bedtime && timeDifference(now,bedtime)
+
 
 // Animate when progress changes
 useEffect(() => {
     Animated.timing(progressAnimation, {
-    toValue: progress,
+    toValue: percentage!,
     duration: duration,
     easing: Easing.out(Easing.ease),
     useNativeDriver: true,
     }).start();
-}, [progress, duration]);
+}, [percentage, duration]);
 
 // Calculate the animated stroke dash offset
 const strokeDashoffset = progressAnimation.interpolate({
