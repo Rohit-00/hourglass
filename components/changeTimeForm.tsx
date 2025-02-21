@@ -62,9 +62,8 @@ export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
             <TouchableOpacity style={styles.inputContainer} onPress={()=>setShowWakeupPicker(true)}>
             <Text 
             style={styles.placeholder} 
-            
             >
-                {wakeupTimeInput?wakeupTimeInput:'Wake up time'}
+         {wakeupTimeInput?wakeupTimeInput:'Wake up time'}
                 </Text>
             {showWakeupPicker && (
                 <DateTimePicker

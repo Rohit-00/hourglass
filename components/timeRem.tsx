@@ -8,6 +8,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useEffect } from "react";
 import { useCallback } from "react";
 import { useTime } from "../store/timeContext";
+import { convertTimeToDate, timeDifference } from "../utils/dateHelpers";
 
 interface ChildProps {
   bottomSheetModalRef: React.RefObject<BottomSheetModal>;
@@ -31,12 +32,15 @@ export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunction
     console.log("handleSheetChanges", index);
   }, []);
 
+
   // Send functions to parent when the component mounts
   useEffect(() => {
     sendFunctionsToParent({ handlePresentModalPress, handleSheetChanges });
-    fetchTimes()
+    fetchTimes()   
+    
   }, [sendFunctionsToParent, handlePresentModalPress, handleSheetChanges]);
 
+ 
     return(
         <View style={styles.container}>
         <View style={styles.edit}>

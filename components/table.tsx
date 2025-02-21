@@ -18,7 +18,7 @@ interface ChildProps {
 const Table = ({heading,list,bottomSheetModalRef,sendFunctionsToParent}:ChildProps) => {
 
   const {tasks} = useTasks()
-  
+
   // Define functions inside child
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -34,7 +34,6 @@ const Table = ({heading,list,bottomSheetModalRef,sendFunctionsToParent}:ChildPro
     sendFunctionsToParent({ handlePresentModalPress, handleSheetChanges });
   }, [sendFunctionsToParent, handlePresentModalPress, handleSheetChanges,bottomSheetModalRef.current]);
 
-  console.log(tasks)
   return (
     <View style={styles.container}>
         <View style={styles.headingContainer}>

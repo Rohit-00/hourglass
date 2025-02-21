@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Animated, StyleSheet, Easing } from 'react-native';
 import Svg, { Circle, G, Text } from 'react-native-svg';
+import { useTime } from '../store/timeContext';
+import { timeDifference } from '../utils/dateHelpers';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -17,8 +19,19 @@ const center = size / 2;
 const radius = (size - strokeWidth) / 2;
 const circumference = 2 * Math.PI * radius;
 
+const {bedtime} = useTime()
+
 // Animation value
 const progressAnimation = useRef(new Animated.Value(0)).current;
+
+const now: string = new Date().toLocaleTimeString('en-US', { 
+    hour: 'numeric', 
+    minute: '2-digit', 
+    hour12: true 
+}).replace(/^0/, '');
+
+const diff = timeDifference(now,bedtime!)
+console.log(diff)
 
 // Animate when progress changes
 useEffect(() => {
@@ -79,7 +92,7 @@ return (
             fontSize="42"
             fontWeight="bold"
         >
-            2h 3m
+            {diff}
         </Text>
         <Text
             x={center}
