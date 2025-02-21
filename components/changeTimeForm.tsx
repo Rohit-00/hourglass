@@ -7,12 +7,13 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 interface ChildProps {
     bottomSheetModalRef: React.RefObject<BottomSheetModal>;
-
   }
 export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
+    
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.close();
       }, []);
+
     return (
         <View style={styles.container}>
             <Text style={styles.heading}>Change Time Form</Text>

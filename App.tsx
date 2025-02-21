@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { ChangeTimeForm } from "./components/changeTimeForm";
+import { AddTask } from "./components/addTask";
 
 const list: tasks[] = [
   {
@@ -69,7 +70,7 @@ export default function App() {
       <BottomSheetModalProvider>
         <BottomSheetModal ref={taskBottomSheetModalRef} aria-hidden>
           <BottomSheetView style={styles.contentContainer}>
-           <Text>Hello</Text>
+           <AddTask bottomSheetModalRef={taskBottomSheetModalRef}/>
           </BottomSheetView>
         </BottomSheetModal>
       </BottomSheetModalProvider>
