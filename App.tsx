@@ -11,25 +11,6 @@ import { addTask, createTable, getTasks } from "./database";
 import { TasksProvider } from "./store/tasksContext";
 import { TimeProvider } from "./store/timeContext";
 
-const list: Tasks[] = [
-  {
-    title: "Read a book",
-    time: "30 mins",
-  },
-  {
-    title: "Worked on some stuff",
-    time: "50 mins",
-  },
-  {
-    title: "Did some DSA",
-    time: "30 mins",
-  },
-  {
-    title: "Annoyed Anurag",
-    time: "60 mins",
-  },
-];
-
 export default function App() {
 
   //initialize the databse
@@ -65,7 +46,7 @@ export default function App() {
           <StatusBar style="auto" />
           <View style={styles.container}>
             <TimeRem bottomSheetModalRef={bottomSheetModalRef} sendFunctionsToParent={handleReceiveChildFunctions} />
-            <Table heading="What Have I Done Today" list={list} bottomSheetModalRef={taskBottomSheetModalRef} sendFunctionsToParent={handleReceiveChildFunctions}/>
+            <Table heading="What Have I Done Today" bottomSheetModalRef={taskBottomSheetModalRef} sendFunctionsToParent={handleReceiveChildFunctions}/>
             
           </View>
         </ScrollView>

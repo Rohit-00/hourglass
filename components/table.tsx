@@ -12,10 +12,9 @@ interface ChildProps {
       handleSheetChanges: (index: number) => void;
     }) => void;
     heading:string;
-    list: Tasks[]
   }
   
-const Table = ({heading,list,bottomSheetModalRef,sendFunctionsToParent}:ChildProps) => {
+const Table = ({heading,bottomSheetModalRef,sendFunctionsToParent}:ChildProps) => {
 
   const {tasks} = useTasks()
 
@@ -43,19 +42,29 @@ const Table = ({heading,list,bottomSheetModalRef,sendFunctionsToParent}:ChildPro
             </TouchableOpacity>
         </View>
         <View>
-            {
-                tasks&&tasks.map((item,index)=>(
-                    <View key={index}>
-                    <View key={index} style={styles.table}>
-                        <Text style={{color:colors.text}}>{item.title}</Text>
-                        <Text style={{color:colors.text}}>{item.time}</Text>
-                   
-                    </View>
-                    <View style={{borderBottomColor:colors.border,borderBottomWidth:0.5,marginTop:5}}/>
-                     </View>
-                ))
-            }
+    {tasks && tasks.map((item, index) => (
+        <View key={index}>
+            <View style={styles.table}>
+                <View style={styles.titleColumn}>
+                    <View style={[styles.colorDot, {
+                        backgroundColor: item.tag === 'Productive' ? '#00C896' 
+                            : item.tag === 'neutral' ? 'grey' 
+                            : '#E05E5E'
+                    }]} />
+                    <Text style={styles.titleText}>{item.title}</Text>
+                </View>
+                <View style={styles.durationColumn}>
+                    <Text style={styles.cellText}>{item.duration}</Text>
+                </View>
+                <View style={styles.percentageColumn}>
+                    <Text style={styles.cellText}>{item.percentage}%</Text>
+                </View>
+            </View>
+            <View style={styles.divider} />
         </View>
+    ))}
+</View>
+
     </View>
   )
 }
@@ -83,9 +92,39 @@ const styles = StyleSheet.create({
             color:colors.text,
             marginBottom:10
       },
-      table:{
-        flexDirection:'row',
-        justifyContent:'space-between',
-        marginTop:10
+      table: {
+        flexDirection: 'row',
+        paddingVertical: 10,
+        alignItems: 'center',
+    },
+    titleColumn: {
+        flex: 2,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    durationColumn: {
+        flex: 1,
+        alignItems: 'center',
+    },
+    percentageColumn: {
+        flex: 1,
+        alignItems: 'center',
+    },
+    colorDot: {
+        height: 12,
+        width: 12,
+        borderRadius: 100,
+        marginRight: 8,
+    },
+    titleText: {
+        color: colors.text,
+    },
+    cellText: {
+        color: colors.text,
+    },
+    divider: {
+        borderBottomColor: colors.border,
+        borderBottomWidth: 0.5,
+        marginTop: 5,
     }
 })
