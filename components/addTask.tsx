@@ -35,7 +35,7 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
     const handleSubmit = async() => {
 
         const currentDate = new Date().toLocaleDateString();
-        const difference = convertTimeDifferenceToNumber(timeDifference(startTime,endTime));
+        const difference = timeDifference(startTime,endTime);
         const data = await createTask(currentDate,task,difference.toString(),percentage,moodValue);
         console.log(data)
         bottomSheetModalRef.current?.close();
