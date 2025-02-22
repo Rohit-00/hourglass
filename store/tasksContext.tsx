@@ -7,7 +7,7 @@ import { getTasks, addTask } from '../database';
 interface TasksContextType {
     tasks: Tasks[];
     fetchTasks: () => Promise<void>;
-    createTask: (title: string, time: string) => Promise<void>;
+    createTask: (date:string,title: string, duration: string, percentage:number,tag:string) => Promise<void>;
 }
 
 const TasksContext = createContext<TasksContextType | undefined>(undefined);
@@ -20,8 +20,8 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setTasks(allTasks);
     };
 
-    const createTask = async (title: string, time: string) => {
-        await addTask(title, time);
+    const createTask = async (date:string,title: string, duration: string, percentage:number,tag:string) => {
+        await addTask(date,title, duration, percentage, tag);
         await fetchTasks(); // Refresh the task list after adding a new task
     };
 
