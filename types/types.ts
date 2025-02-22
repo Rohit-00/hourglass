@@ -1,7 +1,9 @@
 type Tasks = {   
-    percentage?:string;
+    date?:string;
+    percentage?:number;
     title: string;  
-    time: string;
+    duration: string;
+    tag?:string;
 }
 
 type TableProps = {
