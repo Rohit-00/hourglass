@@ -20,7 +20,8 @@
     "react-native-gesture-handler": "~2.20.2",
     "@gorhom/bottom-sheet": "^5",
     "@react-native-async-storage/async-storage": "1.23.1",
-    "@react-native-community/datetimepicker": "8.2.0"
+    "@react-native-community/datetimepicker": "8.2.0",
+    "@react-native-picker/picker": "2.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
