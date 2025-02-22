@@ -47,10 +47,8 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
         </View>
     
         <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handlePresentModalPress}>
-                <View style={styles.cancelButton}>
+            <TouchableOpacity style={styles.cancelButton} onPress={handlePresentModalPress}>    
                     <Text>Cancel</Text>
-                </View>
             </TouchableOpacity>
             <TouchableOpacity style={styles.updateButton} onPress={handleSubmit}>
                 <Text>Add</Text>
@@ -91,7 +89,7 @@ const styles = StyleSheet.create({
 
     },
     cancelButton:{
-        width:100,
+        width:'48%',
         height:40,
         borderWidth:1,
         borderColor:colors.border,
@@ -101,7 +99,7 @@ const styles = StyleSheet.create({
         justifyContent:'center'
     },
     updateButton:{
-        width:100,
+        width:'48%',
         height:40,
         borderRadius:10,
         backgroundColor:colors.primary,
