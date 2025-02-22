@@ -4,7 +4,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Entypo from '@expo/vector-icons/Entypo';
 import { useCallback, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { addTask } from "../database";
+import { addTask, getMissingPercentage, getNeutralPercentage, getProductivePercentage, getUnproductivePercentage } from "../database";
 import { useTasks } from "../store/tasksContext";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { convertTimeDifferenceToNumber, timeDifference } from "../utils/dateHelpers";
@@ -19,7 +19,6 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
     const [showStartTimePicker, setShowStartTimePicker] = useState(false);
     const [showEndTimePicker, setShowEndTimePicker] = useState(false);
     const [task, setTask] = useState('');
-    const [time, setTime] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [moodValue, setMoodValue] = useState('neutral');
@@ -36,8 +35,9 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
 
         const currentDate = new Date().toLocaleDateString();
         const difference = timeDifference(startTime,endTime);
-        const data = await createTask(currentDate,task,difference.toString(),percentage,moodValue);
-        console.log(data)
+        const data = await getMissingPercentage()
+        console.log(data);
+        // await createTask(currentDate,task,difference.toString(),percentage,moodValue);
         bottomSheetModalRef.current?.close();
     }
     return(
@@ -50,7 +50,6 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
             value={task} 
             onChangeText={setTask} 
         />
-        <FontAwesome5 style={{opacity:0.7}} name="tasks" size={24} color={colors.text} />
         </View>
 
         <View style={styles.dateContainer}>
@@ -88,7 +87,7 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
                         setEndTime(new Date(currentDate.toString().replace(/^"+|"+$/g, '')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
                         const difference = convertTimeDifferenceToNumber(timeDifference(startTime,new Date(currentDate.toString().replace(/^"+|"+$/g, '')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })));
                         fetchTimes();
-                        setPercentage(difference/convertTimeDifferenceToNumber(timeDifference(wakeupTime!,bedtime!))*100);
+                        setPercentage(parseFloat((difference/convertTimeDifferenceToNumber(timeDifference(wakeupTime!,bedtime!))*100).toFixed(2)));
                     }}
                 />
             )}

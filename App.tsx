@@ -16,8 +16,7 @@ export default function App() {
   //initialize the databse
   useEffect(()=>{
     const initDB = async() => {
-      const d = await createTable()
-      console.log(d)
+      await createTable()
     }
     initDB()
   })

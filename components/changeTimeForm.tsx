@@ -18,8 +18,8 @@ export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
     const [showWakeupPicker, setShowWakeupPicker] = useState(false);
 
     const { setBedtime, setWakeupTime, fetchTimes,bedtime,wakeupTime } = useTime();
-    const [bedtimeInput, setBedtimeInput] = useState('');
-    const [wakeupTimeInput, setWakeupTimeInput] = useState('');
+    const [bedtimeInput, setBedtimeInput] = useState<string>(bedtime!);
+    const [wakeupTimeInput, setWakeupTimeInput] = useState<string>(wakeupTime!);
 
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.close();
