@@ -4,7 +4,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Entypo from '@expo/vector-icons/Entypo';
 import { useCallback, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { addTask, getMissingPercentage, getNeutralPercentage, getProductivePercentage, getUnproductivePercentage } from "../database";
+import { addTask, getMissingPercentage, getNeutralPercentage, getProductivePercentage, getTotalMissingHours, getTotalProductiveHours, getUnproductivePercentage } from "../database";
 import { useTasks } from "../store/tasksContext";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { convertTimeDifferenceToNumber, timeDifference } from "../utils/dateHelpers";
@@ -34,10 +34,8 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
     const handleSubmit = async() => {
 
         const currentDate = new Date().toLocaleDateString();
-        const difference = timeDifference(startTime,endTime);
-        const data = await getMissingPercentage()
-        console.log(data);
-        // await createTask(currentDate,task,difference.toString(),percentage,moodValue);
+        const difference = convertTimeDifferenceToNumber(timeDifference(startTime,endTime));
+        await createTask(currentDate,task,difference.toString(),percentage,moodValue,startTime,endTime);
         bottomSheetModalRef.current?.close();
     }
     return(

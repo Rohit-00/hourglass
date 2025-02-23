@@ -1,12 +1,20 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { colors } from '../utils/colors'
+import { useTasks } from '../store/tasksContext'
 
-const OverallRes = () => {
+interface ResultProps {
+    heading : string;
+    day : string;
+}
+const OverallRes:React.FC<ResultProps> = ({day,heading}) => {
+
+  const {result,yesterdayResult} = useTasks()
+  const res = day === 'today' ? result : yesterdayResult
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Today is mostly</Text>
-      <Text style={styles.result}>Productive</Text>
+      <Text style={styles.text}>{heading}</Text>
+      <Text style={[styles.result,{color:res==='Productive'?colors.positive:res==='Unproductive'?colors.negative:res==='Missing'?'#FFB800':'grey'}]}>{res?res:'Neutral'}</Text>
     </View>
   )
 }

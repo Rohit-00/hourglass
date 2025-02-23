@@ -8,12 +8,12 @@ const BentoGrid = () => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <OverallRes/>
+        <OverallRes day='today' heading='Today is mostly'/>
         <MetricsCard/>
       </View>
       <View style={styles.row}>
         <MetricsCard/>
-        <OverallRes/>
+        <OverallRes day='yesterday' heading='Yesterday was mostly'/>
       </View>
     </View> 
   )
