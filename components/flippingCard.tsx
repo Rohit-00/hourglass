@@ -1,98 +1,88 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, interpolate, withSpring } from 'react-native-reanimated';
-import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import { StyleSheet, View, Text } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolate,
+} from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { colors } from '../utils/colors';
 
-const FlippingCard = () => {
-    const rotateY = useSharedValue(0);
-    
-    const panGesture = Gesture.Pan()
-        .onUpdate((e) => {
-            // Convert pan x movement to degrees (180 degrees max)
-            const rotation = Math.min(Math.max(e.translationX / 2, -180), 180);
-            rotateY.value = rotation;
-        })
-        .onEnd((e) => {
-            // Snap to nearest side based on velocity and current rotation
-            const shouldFlip = Math.abs(e.velocityX) > 20 || Math.abs(rotateY.value) > 90;
-            rotateY.value = withSpring(
-                shouldFlip ? (rotateY.value > 0 ? 180 : -180) : 0,
-                {
-                    velocity: e.velocityX,
-                    damping: 15,
-                    stiffness: 100,
-                }
-            );
-        });
+const FlipCard = ({ duration = 500, flipThreshold = 100 }) => {
+  // For right-to-left swipe, flipProgress goes from 0 (front) to -1 (back)
+  const flipProgress = useSharedValue(0);
+  const initialFlip = useSharedValue(0);
 
-    const animatedFrontStyle = useAnimatedStyle(() => {
-        return {
-            transform: [
-                { perspective: 1000 },
-                { rotateY: `${rotateY.value}deg` },
-            ],
-            backfaceVisibility: 'hidden',
-            shadowOpacity: interpolate(
-                Math.abs(rotateY.value),
-                [0, 90, 180],
-                [0.3, 0, 0.3]
-            ),
-        };
-    });
+  // Front side rotates from 0° to -180° as flipProgress goes from 0 to -1
+  const frontAnimatedStyle = useAnimatedStyle(() => {
+    const spin = interpolate(flipProgress.value, [0, -1], [0, -180]);
+    return {
+      transform: [
+        { perspective: 1000 },
+        { rotateY: `${spin}deg` },
+      ],
+    };
+  });
 
-    const animatedBackStyle = useAnimatedStyle(() => {
-        return {
-            transform: [
-                { perspective: 1000 },
-                { rotateY: `${rotateY.value + 180}deg` },
-            ],
-            backfaceVisibility: 'hidden',
-            shadowOpacity: interpolate(
-                Math.abs(rotateY.value),
-                [0, 90, 180],
-                [0, 0.3, 0.3]
-            ),
-        };
-    });
+  // Back side rotates from 180° to 0° (correcting the perspective)
+  const backAnimatedStyle = useAnimatedStyle(() => {
+    // Change interpolation range: at flipProgress=0, we want 180°; at -1, 0°.
+    const spin = interpolate(flipProgress.value, [0, -1], [180, 0]);
+    return {
+      transform: [
+        { perspective: 1000 },
+        { rotateY: `${spin}deg` },
+      ],
+    };
+  });
 
- 
-    const tapGesture = Gesture.Tap()
+  // Pan gesture: update flipProgress based on horizontal drag.
+  // A right-to-left swipe gives negative translationX.
+  const panGesture = Gesture.Pan()
+    .onStart(() => {
+      initialFlip.value = flipProgress.value;
+    })
+    .onUpdate((event) => {
+      let newProgress = initialFlip.value + event.translationX / flipThreshold;
+      // Clamp between 0 (front) and -1 (back)
+      newProgress = Math.min(Math.max(newProgress, -1), 0);
+      flipProgress.value = newProgress;
+    })
     .onEnd(() => {
-        rotateY.value = withTiming(
-            rotateY.value === 0 ? 180 : 0, 
-            { duration: 800 }
-        );
+      if (flipProgress.value < -0.5) {
+        flipProgress.value = withTiming(-1, { duration });
+      } else {
+        flipProgress.value = withTiming(0, { duration });
+      }
     });
 
-const combinedGesture = Gesture.Race(tapGesture, panGesture);
   return (
-    <View style={styles.container}>
-    <GestureDetector gesture={combinedGesture}>
-        <View>
-        <Animated.View style={[styles.statsCard, animatedFrontStyle]}>
-        <Text style={styles.headerText}>Day so far:</Text>
-                <View style={styles.tableContainer}>
+    <GestureDetector gesture={panGesture}>
+      <Animated.View style={styles.container}>
+        <Animated.View style={[styles.statsCard, frontAnimatedStyle]}>
+        <Text style={styles.headerText}>Time Spent</Text>
+        <View style={styles.tableContainer}>
                     <View style={styles.tableRow}>
                         <Text style={styles.label}>Productive</Text>
-                        <Text style={[styles.value, { color: '#00C896' }]}>45%</Text>
+                        <Text style={[styles.value, { color: '#00C896' }]}>4h 2m</Text>
                     </View>
                     <View style={styles.tableRow}>
                         <Text style={styles.label}>Unproductive</Text>
-                        <Text style={[styles.value, { color: '#E05E5E' }]}>25%</Text>
+                        <Text style={[styles.value, { color: '#E05E5E' }]}>1h 5m</Text>
                     </View>
                     <View style={styles.tableRow}>
                         <Text style={styles.label}>Neutral</Text>
-                        <Text style={[styles.value, { color: '#808080' }]}>15%</Text>
+                        <Text style={[styles.value, { color: '#808080' }]}>3h 5m</Text>
                     </View>
                     <View style={styles.tableRow}>
                         <Text style={styles.label}>Missing</Text>
-                        <Text style={[styles.value, { color: '#FFB800' }]}>15%</Text>
+                        <Text style={[styles.value, { color: '#FFB800' }]}>2h 30m</Text>
                     </View>
                 </View>
         </Animated.View>
-        <Animated.View style={[styles.statsCard, animatedBackStyle]}>
-        <Text style={styles.headerText}>Day so far:</Text>
+        <Animated.View style={[styles.statsCard, backAnimatedStyle]}>
+        <Text style={styles.headerText}>Time Spent (%)</Text>
         <View style={styles.tableContainer}>
                     <View style={styles.tableRow}>
                         <Text style={styles.label}>Productive</Text>
@@ -112,16 +102,15 @@ const combinedGesture = Gesture.Race(tapGesture, panGesture);
                     </View>
                 </View>
         </Animated.View>
-        </View>
+      </Animated.View>
     </GestureDetector>
-</View>
-  )
-}
-
-export default FlippingCard
+  );
+};
 
 const styles = StyleSheet.create({
     container: {
+        height:200,
+        marginBottom:15,
         width:'100%',
 
     },
@@ -134,14 +123,14 @@ const styles = StyleSheet.create({
         borderRadius:10,
         borderColor:colors.border,
         borderWidth:0.5,
-      
+        position:'absolute',
         backfaceVisibility: 'hidden',
        
     },
     headerText: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 5,
         color: '#333',
     },
     tableContainer: {
@@ -162,4 +151,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     }
-})
+});
+
+export default FlipCard;
