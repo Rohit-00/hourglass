@@ -1,10 +1,12 @@
 import * as SQLite from 'expo-sqlite';
-import { useTime } from './store/timeContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { convertTimeDifferenceToNumber, timeDifference } from './utils/dateHelpers';
 
 const db = SQLite.openDatabaseSync('appData.db');
 const date = new Date().toLocaleDateString();
+const yesterday = new Date();
+yesterday.setDate(yesterday.getDate() - 1);
+const yesterdayDate = yesterday.toLocaleDateString();
 export const createTable = async () => {
 
     await db.execAsync(`
@@ -83,6 +85,5 @@ export const getTotalMissingHours = async() => {
     const unproductive:any = await getTotalUnproductiveHours();
     const neutral:any = await getTotalNeutralHours();
     const missing = totalTime - (productive[0].total + unproductive[0].total + neutral[0].total);
-    
     return missing
 }
