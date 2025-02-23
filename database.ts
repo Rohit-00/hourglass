@@ -1,4 +1,7 @@
 import * as SQLite from 'expo-sqlite';
+import { useTime } from './store/timeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { convertTimeDifferenceToNumber, timeDifference } from './utils/dateHelpers';
 
 const db = SQLite.openDatabaseSync('appData.db');
 const date = new Date().toLocaleDateString();
@@ -48,11 +51,37 @@ export const getNeutralPercentage = async() => {
 }
 
 export const getMissingPercentage = async() => {
-
     const result:any = await db.getAllAsync('SELECT SUM(percentage) as total  FROM work WHERE date = ?',date);
     const productive:any = await getProductivePercentage();
     const unproductive:any = await getUnproductivePercentage();
     const neutral:any = await getNeutralPercentage();
     const missing = result[0].total - (productive[0].total + unproductive[0].total + neutral[0].total);
+    return missing
+}
+
+export const getTotalProductiveHours = async() => {
+    const result = await db.getAllAsync('SELECT SUM(duration) as total FROM work WHERE tag = "Productive" AND date = ?',date);
+    return result
+}
+
+export const getTotalUnproductiveHours = async() => {
+    const result = await db.getAllAsync('SELECT SUM(duration) as total FROM work WHERE tag = "Anti-Productive" AND date = ?',date);
+    return result
+}
+
+export const getTotalNeutralHours = async() => {
+    const result = await db.getAllAsync('SELECT SUM(duration) as total FROM work WHERE tag = "neutral" AND date = ?',date);
+    return result
+}
+
+export const getTotalMissingHours = async() => {
+    const storedBedtime:any = await AsyncStorage.getItem('bedtime');
+    const storedWakeupTime:any = await AsyncStorage.getItem('wakeupTime');
+    const totalTime = convertTimeDifferenceToNumber(timeDifference(storedWakeupTime,storedBedtime)); 
+    const productive:any = await getTotalProductiveHours();
+    const unproductive:any = await getTotalUnproductiveHours();
+    const neutral:any = await getTotalNeutralHours();
+    const missing = totalTime - (productive[0].total + unproductive[0].total + neutral[0].total);
+    
     return missing
 }
