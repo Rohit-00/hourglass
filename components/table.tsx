@@ -4,6 +4,7 @@ import { colors } from '../utils/colors'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTasks } from '../store/tasksContext';
+import { convertToTimeDuration } from '../utils/dateHelpers';
 
 interface ChildProps {
     bottomSheetModalRef: React.RefObject<BottomSheetModal>;
@@ -22,6 +23,7 @@ const Table = ({heading,bottomSheetModalRef,sendFunctionsToParent}:ChildProps) =
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
     bottomSheetModalRef.current?.close();
+    
   }, []);
 
   const handleSheetChanges = useCallback((index: number) => {
@@ -54,7 +56,7 @@ const Table = ({heading,bottomSheetModalRef,sendFunctionsToParent}:ChildProps) =
                     <Text style={styles.titleText}>{item.title}</Text>
                 </View>
                 <View style={styles.durationColumn}>
-                    <Text style={styles.cellText}>{item.duration}</Text>
+                    <Text style={styles.cellText}>{convertToTimeDuration(item.duration)}</Text>
                 </View>
                 <View style={styles.percentageColumn}>
                     <Text style={styles.cellText}>{item.percentage}%</Text>
