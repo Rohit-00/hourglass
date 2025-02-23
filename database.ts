@@ -16,10 +16,10 @@ export const createTable = async () => {
     return  db
 };
 
-export const addTask = async (date:string,title:string,duration:string,percentage:number,tag:string) => {
+export const addTask = async (date:string,title:string,duration:string,percentage:number,tag:string,start_time:string,end_time:string) => {
     const result = await db.runAsync(
-        'INSERT INTO task_done (date, title, duration, percentage, tag) VALUES (?, ?, ?, ?, ?)'
-        , date, title, duration, percentage, tag);
+        'INSERT INTO task_done (date, title, duration, percentage, tag, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?, ?)'
+        , date, title, duration, percentage, tag, start_time, end_time);
     return result
     
 }
