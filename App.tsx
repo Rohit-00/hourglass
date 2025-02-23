@@ -10,13 +10,15 @@ import { AddTask } from "./components/addTask";
 import { addTask, createTable, getTasks } from "./database";
 import { TasksProvider } from "./store/tasksContext";
 import { TimeProvider } from "./store/timeContext";
+import BentoGrid from "./components/bentoGrid";
 
 export default function App() {
 
   //initialize the databse
   useEffect(()=>{
     const initDB = async() => {
-      await createTable()
+    await createTable()
+
     }
     initDB()
   })
@@ -45,6 +47,7 @@ export default function App() {
           <StatusBar style="auto" />
           <View style={styles.container}>
             <TimeRem bottomSheetModalRef={bottomSheetModalRef} sendFunctionsToParent={handleReceiveChildFunctions} />
+            <BentoGrid/>
             <Table heading="What Have I Done Today" bottomSheetModalRef={taskBottomSheetModalRef} sendFunctionsToParent={handleReceiveChildFunctions}/>
             
           </View>
@@ -73,7 +76,6 @@ export default function App() {
     </GestureHandlerRootView>
     </TasksProvider>
     </TimeProvider>
-    
   );
 }
 

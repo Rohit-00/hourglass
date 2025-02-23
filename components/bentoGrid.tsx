@@ -1,16 +1,19 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { colors } from '../utils/colors'
-import FlippingCard from './flippingCard'
+import MetricsCard from './metricsCard'
+import OverallRes from './overallRes'
 
 const BentoGrid = () => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <FlippingCard/>
+        <OverallRes/>
+        <MetricsCard/>
       </View>
       <View style={styles.row}>
-        <FlippingCard/>
+        <MetricsCard/>
+        <OverallRes/>
       </View>
     </View> 
   )
@@ -28,6 +31,7 @@ const styles = StyleSheet.create({
     row:{
         flexDirection:'column',
         width:'48%',
+
         
     },
     gridItem:{
