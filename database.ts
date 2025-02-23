@@ -87,3 +87,32 @@ export const getTotalMissingHours = async() => {
     const missing = totalTime - (productive[0].total + unproductive[0].total + neutral[0].total);
     return missing
 }
+
+const getYesterdayMissingHours = async() => {
+    const storedBedtime:any = await AsyncStorage.getItem('bedtime');
+    const storedWakeupTime:any = await AsyncStorage.getItem('wakeupTime');
+    const totalTime = convertTimeDifferenceToNumber(timeDifference(storedWakeupTime,storedBedtime)); 
+    const productive:any = await db.getAllAsync('SELECT SUM(duration) as total FROM task_done WHERE tag = "Productive" AND date = ?',yesterdayDate);
+    const unproductive:any = await db.getAllAsync('SELECT SUM(duration) as total FROM task_done WHERE tag = "Anti-Productive" AND date = ?',yesterdayDate);
+    const neutral:any = await db.getAllAsync('SELECT SUM(duration) as total FROM task_done WHERE tag = "neutral" AND date = ?',yesterdayDate);
+    const missing = totalTime - (productive[0].total + unproductive[0].total + neutral[0].total);
+    return missing
+}
+export const getYesterdayResult = async() => {
+    const productive:any = await db.getAllAsync('SELECT SUM(duration) as total FROM task_done WHERE tag = "Productive" AND date = ?',yesterdayDate);
+    const unproductive:any = await db.getAllAsync('SELECT SUM(duration) as total FROM task_done WHERE tag = "Anti-Productive" AND date = ?',yesterdayDate);
+    const missing:any = getYesterdayMissingHours();
+    if (productive[0].total > unproductive[0].total){
+        return "Productive"
+    } if(productive[0].total === unproductive[0].total){
+        return "Neutral"
+    }
+    if(missing>productive[0].total){
+        return "Missing"
+    }
+    else{
+        return "Unproductive"
+    }
+    
+}
+
