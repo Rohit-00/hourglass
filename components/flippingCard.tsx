@@ -1,56 +1,74 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, interpolate } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, interpolate, withSpring } from 'react-native-reanimated';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import { colors } from '../utils/colors';
 
 const FlippingCard = () => {
-
     const rotateY = useSharedValue(0);
+    
+    const panGesture = Gesture.Pan()
+        .onUpdate((e) => {
+            // Convert pan x movement to degrees (180 degrees max)
+            const rotation = Math.min(Math.max(e.translationX / 2, -180), 180);
+            rotateY.value = rotation;
+        })
+        .onEnd((e) => {
+            // Snap to nearest side based on velocity and current rotation
+            const shouldFlip = Math.abs(e.velocityX) > 20 || Math.abs(rotateY.value) > 90;
+            rotateY.value = withSpring(
+                shouldFlip ? (rotateY.value > 0 ? 180 : -180) : 0,
+                {
+                    velocity: e.velocityX,
+                    damping: 15,
+                    stiffness: 100,
+                }
+            );
+        });
 
     const animatedFrontStyle = useAnimatedStyle(() => {
         return {
-        transform: [
-            { perspective: 1000 },
-            {
-            rotateY: `${interpolate(
-                rotateY.value,
-                [0, 180],
-                [0, 180]
-            )}deg`,
-            },
-        ],
-        backfaceVisibility: 'hidden',
-        shadowOpacity: interpolate(rotateY.value, [0, 90, 180], [0.3, 0, 0.3]),
+            transform: [
+                { perspective: 1000 },
+                { rotateY: `${rotateY.value}deg` },
+            ],
+            backfaceVisibility: 'hidden',
+            shadowOpacity: interpolate(
+                Math.abs(rotateY.value),
+                [0, 90, 180],
+                [0.3, 0, 0.3]
+            ),
         };
     });
- 
+
     const animatedBackStyle = useAnimatedStyle(() => {
         return {
-        transform: [
-            { perspective: 1000 },
-            {
-            rotateY: `${interpolate(
-                rotateY.value,
-                [0, 180],
-                [180, 360]
-            )}deg`,
-            },
-        ],
-        backfaceVisibility: 'hidden',
-        shadowOpacity: interpolate(rotateY.value, [0, 90, 180], [0.3, 0, 0.3]),
-        position: 'absolute',
-        top: 0,
-        left: 0,
+            transform: [
+                { perspective: 1000 },
+                { rotateY: `${rotateY.value + 180}deg` },
+            ],
+            backfaceVisibility: 'hidden',
+            shadowOpacity: interpolate(
+                Math.abs(rotateY.value),
+                [0, 90, 180],
+                [0, 0.3, 0.3]
+            ),
         };
     });
+
  
-    const flipGesture = Gesture.Tap().onEnd(() => {
-        rotateY.value = withTiming(rotateY.value === 0 ? 180 : 0, { duration: 800 });
+    const tapGesture = Gesture.Tap()
+    .onEnd(() => {
+        rotateY.value = withTiming(
+            rotateY.value === 0 ? 180 : 0, 
+            { duration: 800 }
+        );
     });
+
+const combinedGesture = Gesture.Race(tapGesture, panGesture);
   return (
     <View style={styles.container}>
-    <GestureDetector gesture={flipGesture}>
+    <GestureDetector gesture={combinedGesture}>
         <View>
         <Animated.View style={[styles.statsCard, animatedFrontStyle]}>
         <Text style={styles.headerText}>Day so far:</Text>
@@ -105,9 +123,7 @@ export default FlippingCard
 const styles = StyleSheet.create({
     container: {
         width:'100%',
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+
     },
     statsCard: {
    
@@ -143,7 +159,7 @@ const styles = StyleSheet.create({
         color: '#333',
     },
     value: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
     }
 })
