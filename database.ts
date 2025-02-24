@@ -120,3 +120,8 @@ export const deleteTask = async (id:number) => {
     const result = await db.runAsync('DELETE FROM all_tasks WHERE id = ?',id);
     return result
 }
+
+export const getOneTask = async(id:number) => {
+    const task = await db.getFirstAsync('SELECT * FROM all_tasks WHERE id = ?',id);
+    return task
+}
