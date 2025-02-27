@@ -6,11 +6,12 @@ const db = SQLite.openDatabaseSync('appData.db');
 const date = new Date().toLocaleDateString();
 const yesterday = new Date();
 yesterday.setDate(yesterday.getDate() - 1);
-const yesterdayDate = yesterday.toLocaleDateString();
+export const yesterdayDate = yesterday.toLocaleDateString();
 export const createTable = async () => {
 
     await db.execAsync(`
         PRAGMA journal_mode = WAL;
+        CREATE TABLE IF NOT EXISTS daily_result (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, result TEXT);
         CREATE TABLE IF NOT EXISTS all_tasks (id INTEGER PRIMARY KEY AUTOINCREMENT ,date TEXT,title TEXT NOT NULL, duration INTEGER, percentage INTEGER, tag TEXT, start_time TEXT, end_time TEXT);
         `);
     return  db
@@ -32,10 +33,7 @@ export const getTasks = async() => {
 
 
 export const getProductivePercentage = async() => { 
-
-
-    const result = await db.getAllAsync('SELECT SUM(percentage) as total FROM all_tasks WHERE tag = "Productive" AND date = ?',date);
-    
+    const result = await db.getAllAsync('SELECT SUM(percentage) as total FROM all_tasks WHERE tag = "Productive" AND date = ?',date); 
     return result
 }
 
@@ -61,13 +59,13 @@ export const getMissingPercentage = async() => {
     return missing
 }
 
-export const getTotalProductiveHours = async() => {
+export const getTotalProductiveHours = async(date:string) => {
     const result = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "Productive" AND date = ?',date);
     
     return result
 }
 
-export const getTotalUnproductiveHours = async() => {
+export const getTotalUnproductiveHours = async(date:string) => {
     const result = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "Anti-Productive" AND date = ?',date);
     return result
 }
@@ -81,12 +79,13 @@ export const getTotalMissingHours = async() => {
     const storedBedtime:any = await AsyncStorage.getItem('bedtime');
     const storedWakeupTime:any = await AsyncStorage.getItem('wakeupTime');
     const totalTime = convertTimeDifferenceToNumber(timeDifference(storedWakeupTime,storedBedtime)); 
-    const productive:any = await getTotalProductiveHours();
-    const unproductive:any = await getTotalUnproductiveHours();
+    const productive:any = await getTotalProductiveHours(date);
+    const unproductive:any = await getTotalUnproductiveHours(date);
     const neutral:any = await getTotalNeutralHours();
     const missing = totalTime - (productive[0].total + unproductive[0].total + neutral[0].total);
     return missing
 }
+
 
 const getYesterdayMissingHours = async() => {
     const storedBedtime:any = await AsyncStorage.getItem('bedtime');
@@ -124,4 +123,30 @@ export const deleteTask = async (id:number) => {
 export const getOneTask = async(id:number) => {
     const task = await db.getFirstAsync('SELECT * FROM all_tasks WHERE id = ?',id);
     return task
+}
+
+export const getYesterdayTasks = async() => {
+    const allRows:Tasks[] = await db.getAllAsync(`SELECT * FROM all_tasks WHERE date = ?`,yesterdayDate);
+    return allRows
+}
+
+export const addResult = async(date:string,result:string) => {
+    try{
+    const data = await db.getFirstAsync('SELECT * FROM daily_result WHERE date = ?',date)
+    if(data === null){
+        const res = await db.runAsync(
+            'INSERT INTO daily_result (date, result) VALUES (?, ?)'
+            , date,result);
+    
+        return res
+    }}catch(e){
+        console.log(e)
+    }
+    return null
+
+}
+
+export const getResults = async() => {
+    const allRows:Result[] = await db.getAllAsync(`SELECT * FROM daily_result`);
+    return allRows
 }
