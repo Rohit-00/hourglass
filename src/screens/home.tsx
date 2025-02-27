@@ -26,7 +26,7 @@ const Home = () => {
       };
     
   return (
-    <View>
+    <View  style={styles.safeArea}>
         <SafeAreaView>
         <ScrollView showsVerticalScrollIndicator={false}>
           <StatusBar style="auto" />
@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
         paddingHorizontal: 15,
+      
       },
       container: {
         flex: 1,
