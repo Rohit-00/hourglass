@@ -1,7 +1,7 @@
 // context/TasksContext.tsx
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getTasks, addTask, getTotalProductiveHours, getTotalUnproductiveHours, getTotalMissingHours, getTotalNeutralHours, getYesterdayResult, deleteTask } from '../database';
+import {addResult, getTasks, addTask, getTotalProductiveHours, getTotalUnproductiveHours, getTotalMissingHours, getTotalNeutralHours, getYesterdayResult, deleteTask, yesterdayDate, getResults } from '../database';
 
 
 interface TasksContextType {
@@ -17,6 +17,7 @@ interface TasksContextType {
     fetchYesterdayResult:()=>Promise<void>;
     yesterdayResult:string;
     deleteSingleTask:(id:number)=>Promise<void>;
+    allResults:Result[];
 }
 
 const TasksContext = createContext<TasksContextType | undefined>(undefined);
@@ -29,11 +30,12 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const [missing, setMissing] = useState<number>(0);
     const [result, setResult] = useState<string>('');
     const [yesterdayResult, setYesterdayResult] = useState<string>('');
+    const [allResults, setAllResults] = useState<Result[]>([])
 
     const fetchTasks = async () => {
         const allTasks = await getTasks();
-        fetchProductive();
         setTasks(allTasks);
+        fetchProductive();
     };
 
     const createTask = async (date:string,title: string, duration: string, percentage:number,tag:string, startTime:string, endTime:string) => {
@@ -45,8 +47,8 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
 
     const fetchProductive = async () => {
-        const productive : any = await getTotalProductiveHours();
-        const Unproductive : any = await getTotalUnproductiveHours();
+        const productive : any = await getTotalProductiveHours(new Date().toLocaleDateString());
+        const Unproductive : any = await getTotalUnproductiveHours(new Date().toLocaleDateString());
         const neutral : any = await getTotalNeutralHours();
         const missing : any = await getTotalMissingHours();
         setProductive(productive[0].total);
@@ -56,10 +58,10 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
 
     const fetchResult = async () => {
-        const productive : any = await getTotalProductiveHours();
-        const Unproductive : any = await getTotalUnproductiveHours();
+        const productive : any = await getTotalProductiveHours(new Date().toLocaleDateString());
+        const Unproductive : any = await getTotalUnproductiveHours(new Date().toLocaleDateString());
         const missing : any = await getTotalMissingHours();
-        const result = productive[0].total > Unproductive[0].total ? 'Productive' :  'Unproductive';
+        const result = productive[0].total > Unproductive[0].total ? 'Productive'  : 'Unproductive';
         setResult(result);
     }
 
@@ -75,16 +77,24 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         await fetchResult();
     }
 
+    const getAllResults = async() => {
+        const data :Result[]|any = await getResults();
+        setAllResults(data)
+        
+    }
     useEffect(() => {
         fetchTasks(); 
         fetchProductive();
         fetchResult();
         fetchYesterdayResult();
+        getAllResults();
+        
+        
     }, []);
 
 
     return (
-        <TasksContext.Provider value={{ tasks, fetchTasks, createTask,productive,unproductive,neutral,missing,fetchResult,result,fetchYesterdayResult,yesterdayResult,deleteSingleTask }}>
+        <TasksContext.Provider value={{ tasks, fetchTasks, createTask,productive,unproductive,neutral,missing,fetchResult,result,fetchYesterdayResult,yesterdayResult,deleteSingleTask,allResults }}>
             {children}
         </TasksContext.Provider>
     );
