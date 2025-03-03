@@ -9,10 +9,10 @@ const BentoGrid = () => {
     <View style={styles.container}>
       <View style={styles.row}>
         <OverallRes day='today' heading='Today is mostly'/>
-        <MetricsCard/>
+        <MetricsCard title='Today' day='today'/>
       </View>
       <View style={styles.row}>
-        <MetricsCard/>
+        <MetricsCard title='yesterday' day='yesterday'/>
         <OverallRes day='yesterday' heading='Yesterday was mostly'/>
       </View>
     </View> 
