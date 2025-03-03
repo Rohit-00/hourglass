@@ -128,7 +128,7 @@ const {tasks, deleteSingleTask} = useTasks()
                 <TouchableOpacity style={styles.deleteButton} onPress={() => {deleteSingleTask(selectedItem.id); setModalVisible(false)}}>    
                         <Text style={{color:'white'}}>Delete</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.closeModal}>
+                <TouchableOpacity style={styles.closeModal} onPress={()=>setModalVisible(false)}>
                     <Text>Close</Text>
                 </TouchableOpacity>
             </View>
