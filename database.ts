@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { convertTimeDifferenceToNumber, timeDifference } from './utils/dateHelpers';
 
 const db = SQLite.openDatabaseSync('appData.db');
-const date = new Date().toLocaleDateString();
+const TODAY = new Date().toLocaleDateString();
 const yesterday = new Date();
 yesterday.setDate(yesterday.getDate() - 1);
 export const yesterdayDate = yesterday.toLocaleDateString();
@@ -12,7 +12,6 @@ export const createTable = async () => {
 
     await db.execAsync(`
         PRAGMA journal_mode = WAL;
-
         CREATE TABLE IF NOT EXISTS daily_result (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, result TEXT);
         CREATE TABLE IF NOT EXISTS all_tasks (id INTEGER PRIMARY KEY AUTOINCREMENT ,date TEXT,title TEXT NOT NULL, duration INTEGER, percentage INTEGER, tag TEXT, start_time TEXT, end_time TEXT);
         `);}catch(e){
@@ -38,25 +37,25 @@ export const getTasks = async() => {
 
 
 export const getProductivePercentage = async() => { 
-    const result = await db.getAllAsync('SELECT SUM(percentage) as total FROM all_tasks WHERE tag = "Productive" AND date = ?',date); 
+    const result = await db.getAllAsync('SELECT SUM(percentage) as total FROM all_tasks WHERE tag = "Productive" AND date = ?',TODAY); 
     return result
 }
 
 export const getUnproductivePercentage = async() => {
 
-    const result = await db.getAllAsync('SELECT SUM(percentage) as total FROM all_tasks WHERE tag = "Anti-Productive" AND date = ?',date);
+    const result = await db.getAllAsync('SELECT SUM(percentage) as total FROM all_tasks WHERE tag = "Anti-Productive" AND date = ?',TODAY);
 
     return result
 }
 
 export const getNeutralPercentage = async() => {
-    const result = await db.getAllAsync('SELECT SUM(percentage) as total FROM all_tasks WHERE tag = "neutral" AND date = ?',date);
+    const result = await db.getAllAsync('SELECT SUM(percentage) as total FROM all_tasks WHERE tag = "neutral" AND date = ?',TODAY);
 
     return result
 }
 
 export const getMissingPercentage = async() => {
-    const result:any = await db.getAllAsync('SELECT SUM(percentage) as total  FROM all_tasks WHERE date = ?',date);
+    const result:any = await db.getAllAsync('SELECT SUM(percentage) as total  FROM all_tasks WHERE date = ?',TODAY);
     const productive:any = await getProductivePercentage();
     const unproductive:any = await getUnproductivePercentage();
     const neutral:any = await getNeutralPercentage();
@@ -76,7 +75,7 @@ export const getTotalUnproductiveHours = async(date:string) => {
 }
 
 export const getTotalNeutralHours = async() => {
-    const result = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "neutral" AND date = ?',date);
+    const result = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "neutral" AND date = ?',TODAY);
     return result
 }
 
@@ -84,8 +83,8 @@ export const getTotalMissingHours = async() => {
     const storedBedtime:any = await AsyncStorage.getItem('bedtime');
     const storedWakeupTime:any = await AsyncStorage.getItem('wakeupTime');
     const totalTime = convertTimeDifferenceToNumber(timeDifference(storedWakeupTime,storedBedtime)); 
-    const productive:any = await getTotalProductiveHours(date);
-    const unproductive:any = await getTotalUnproductiveHours(date);
+    const productive:any = await getTotalProductiveHours(TODAY);
+    const unproductive:any = await getTotalUnproductiveHours(TODAY);
     const neutral:any = await getTotalNeutralHours();
     const missing = totalTime - (productive[0].total + unproductive[0].total + neutral[0].total);
     return missing
@@ -160,7 +159,8 @@ export const getResults = async() => {
         const productive : any = await getTotalProductiveHours(date);
         const Unproductive : any = await getTotalUnproductiveHours(date);
         const missing : any = await getTotalMissingHours();
-        const result = productive[0].total > Unproductive[0].total ? 'Productive'  : 'Unproductive';
+        const result = productive[0].total > Unproductive[0].total ? 'Productive'  :
+        productive[0].total === null && Unproductive[0].total === null ? 'Missing' : 'Unproductive'
         return result
     }
 
@@ -189,6 +189,7 @@ export const addMonthResults = async (currentMonth: number, currentYear: number)
         if (currentResult === null) {
             currentResult = await fetchResult(key);
             await addResult(key,currentResult)
+            data.push(currentResult)
         } 
 
         resultCache.set(key, currentResult);
