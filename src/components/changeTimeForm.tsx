@@ -92,7 +92,7 @@ export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
         
         </TouchableOpacity>
             <TouchableOpacity style={styles.updateButton} onPress={handleSaveTimes}>
-                <Text>Update</Text>
+                <Text style={{color:'white'}}>Update</Text>
             </TouchableOpacity>
 
         </View>
