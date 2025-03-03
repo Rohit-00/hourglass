@@ -51,14 +51,9 @@ export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunction
         </View>
         <CircularProgress size={240} progress={60} progressColor={colors.primary} backgroundColor={colors.border}/>
         
+
+        
         <View style={styles.iconContainer}>
-        <View style={styles.icon}>
-        <Fontisto name="night-clear" size={34} color={colors.text} />
-        <View style={{flexDirection:'column'}}>
-        <Text style={styles.text}>Bedtime</Text>
-        <Text style={styles.time}>{bedtime}</Text>
-        </View>
-        </View>
 
         <View style={styles.icon}>
         <MaterialIcons name="access-alarm" size={40} color={colors.text} />
@@ -67,6 +62,16 @@ export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunction
         <Text style={styles.time}>{wakeupTime}</Text>
         </View>
         </View>
+
+        <View style={styles.icon}>
+        <Fontisto name="night-clear" size={34} color={colors.text} />
+        <View style={{flexDirection:'column'}}>
+        <Text style={styles.text}>Bedtime</Text>
+        <Text style={styles.time}>{bedtime}</Text>
+        </View>
+        </View>
+
+
         </View>
 
         </View>
