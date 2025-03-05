@@ -12,6 +12,7 @@ export const createTable = async () => {
 
     await db.execAsync(`
         PRAGMA journal_mode = WAL;
+
         CREATE TABLE IF NOT EXISTS daily_result (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, result TEXT);
         CREATE TABLE IF NOT EXISTS all_tasks (id INTEGER PRIMARY KEY AUTOINCREMENT ,date TEXT,title TEXT NOT NULL, duration INTEGER, percentage INTEGER, tag TEXT, start_time TEXT, end_time TEXT);
         `);}catch(e){
@@ -43,7 +44,7 @@ export const getProductivePercentage = async() => {
 
 export const getUnproductivePercentage = async() => {
 
-    const result = await db.getAllAsync('SELECT SUM(percentage) as total FROM all_tasks WHERE tag = "Anti-Productive" AND date = ?',TODAY);
+    const result = await db.getAllAsync('SELECT SUM(percentage) as total FROM all_tasks WHERE tag = "Unproductive" AND date = ?',TODAY);
 
     return result
 }
@@ -70,12 +71,12 @@ export const getTotalProductiveHours = async(date:string) => {
 }
 
 export const getTotalUnproductiveHours = async(date:string) => {
-    const result = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "Anti-Productive" AND date = ?',date);
+    const result = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "Unproductive" AND date = ?',date);
     return result
 }
 
-export const getTotalNeutralHours = async() => {
-    const result = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "neutral" AND date = ?',TODAY);
+export const getTotalNeutralHours = async(date:string) => {
+    const result = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "neutral" AND date = ?',date);
     return result
 }
 
@@ -85,25 +86,25 @@ export const getTotalMissingHours = async() => {
     const totalTime = convertTimeDifferenceToNumber(timeDifference(storedWakeupTime,storedBedtime)); 
     const productive:any = await getTotalProductiveHours(TODAY);
     const unproductive:any = await getTotalUnproductiveHours(TODAY);
-    const neutral:any = await getTotalNeutralHours();
+    const neutral:any = await getTotalNeutralHours(TODAY);
     const missing = totalTime - (productive[0].total + unproductive[0].total + neutral[0].total);
     return missing
 }
 
 
-const getYesterdayMissingHours = async() => {
+export const getYesterdayMissingHours = async() => {
     const storedBedtime:any = await AsyncStorage.getItem('bedtime');
     const storedWakeupTime:any = await AsyncStorage.getItem('wakeupTime');
     const totalTime = convertTimeDifferenceToNumber(timeDifference(storedWakeupTime,storedBedtime)); 
     const productive:any = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "Productive" AND date = ?',yesterdayDate);
-    const unproductive:any = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "Anti-Productive" AND date = ?',yesterdayDate);
+    const unproductive:any = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "Unproductive" AND date = ?',yesterdayDate);
     const neutral:any = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "neutral" AND date = ?',yesterdayDate);
     const missing = totalTime - (productive[0].total + unproductive[0].total + neutral[0].total);
     return missing
 }
 export const getYesterdayResult = async() => {
     const productive:any = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "Productive" AND date = ?',yesterdayDate);
-    const unproductive:any = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "Anti-Productive" AND date = ?',yesterdayDate);
+    const unproductive:any = await db.getAllAsync('SELECT SUM(duration) as total FROM all_tasks WHERE tag = "Unproductive" AND date = ?',yesterdayDate);
     const missing:any = getYesterdayMissingHours();
     if (productive[0].total > unproductive[0].total){
         return "Productive"
@@ -151,6 +152,7 @@ export const addResult = async(date:string,result:string) => {
 }
 
 export const getResults = async() => {
+    const CURRENT_MONTH = new Date().getMonth() + 1
     const allRows:Result[] = await db.getAllAsync(`SELECT * FROM daily_result`);
     return allRows
 }
@@ -168,8 +170,6 @@ export const getResult = async(date:string) => {
     const result = await db.getFirstAsync(`SELECT * FROM daily_result WHERE date = ?`,date)
     return result
 }
-
-// Cache to store fetched results
 const resultCache = new Map<string, any>();
 
 export const addMonthResults = async (currentMonth: number, currentYear: number) => {
@@ -199,3 +199,35 @@ export const addMonthResults = async (currentMonth: number, currentYear: number)
     return data;
 };
 
+export const getThisMonthProductiveDays = async() => {
+    const CURRENT_MONTH = new Date().getMonth() + 1
+    const CURRENT_YEAR = new Date().getFullYear()
+    try{
+        const productiveCount: any = await db.getAllAsync(
+            "SELECT COUNT(*) as total FROM daily_result WHERE result = ? AND date LIKE ? AND date LIKE ?",
+            ["Productive", `${CURRENT_MONTH}%`,`%${CURRENT_YEAR}`]
+          );
+          
+        return productiveCount[0].total - 1
+
+              }catch(e){
+    console.log(e)
+    }
+
+}
+export const getLastMonthProductiveDays = async() => {
+    const LAST_MONTH = new Date().getMonth() 
+    const CURRENT_YEAR = new Date().getFullYear()
+    try{
+        const productiveCount: any = await db.getAllAsync(
+            "SELECT COUNT(*) as total FROM daily_result WHERE result = ? AND date LIKE ? AND date LIKE ?",
+            ["Productive", `${LAST_MONTH}%`,`%${CURRENT_YEAR}`]
+          );
+          
+        return productiveCount
+
+              }catch(e){
+    console.log(e)
+    }
+
+}
