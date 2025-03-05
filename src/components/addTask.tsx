@@ -2,9 +2,9 @@ import { View, Text, TextInput , StyleSheet, TouchableOpacity} from "react-nativ
 import { colors } from "../../utils/colors"
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Entypo from '@expo/vector-icons/Entypo';
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { addTask, deleteTask, getMissingPercentage, getNeutralPercentage, getOneTask, getProductivePercentage, getTotalMissingHours, getTotalProductiveHours, getUnproductivePercentage } from "../../database";
+import { addMonthResults, addTask, deleteTask, getMissingPercentage, getNeutralPercentage, getOneTask, getProductivePercentage, getResult, getResults, getTotalMissingHours, getTotalProductiveHours, getUnproductivePercentage} from "../../database";
 import { useTasks } from "../../store/tasksContext";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { convertTimeDifferenceToNumber, timeDifference } from "../../utils/dateHelpers";
@@ -36,6 +36,7 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
         const currentDate = new Date().toLocaleDateString();
         const difference = convertTimeDifferenceToNumber(timeDifference(startTime,endTime));
         await createTask(currentDate,task,difference.toString(),percentage,moodValue,startTime,endTime);
+
         bottomSheetModalRef.current?.close();
     }
     return(
@@ -77,6 +78,7 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
                 <DateTimePicker
                     value={new Date(endTime)}
                     mode="time"
+                    
                     is24Hour={false}
                     display="default"
                     onChange={(event, selectedDate) => {
@@ -101,7 +103,7 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
         >
             <Picker.Item label="Productive" value="Productive" style={{color:colors.text}}/>
             <Picker.Item label="Neutral" value="neutral" style={{color:colors.text}}/>
-            <Picker.Item label="Anti-Productive" value="Anti-Productive" style={{color:colors.text}}/>
+            <Picker.Item label="Unproductive" value="Unproductive" style={{color:colors.text}}/>
         </Picker>
     </View>
 </View>
@@ -116,7 +118,7 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
                     <Text>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.updateButton} onPress={handleSubmit}>
-                <Text>Add</Text>
+                <Text style={{color:'white'}}>Add</Text>
             </TouchableOpacity>
         </View>
         
@@ -148,7 +150,7 @@ const styles = StyleSheet.create({
     buttonContainer:{
         width:'100%',
         flexDirection:'row',
-        justifyContent:'space-evenly',
+        justifyContent:'space-between',
 
     },
     cancelButton:{
