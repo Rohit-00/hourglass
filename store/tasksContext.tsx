@@ -1,7 +1,7 @@
 // context/TasksContext.tsx
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import {addResult, getTasks, addTask, getTotalProductiveHours, getTotalUnproductiveHours, getTotalMissingHours, getTotalNeutralHours, getYesterdayResult, deleteTask, yesterdayDate, getResults } from '../database';
+import {addResult, getTasks, addTask, getTotalProductiveHours, getTotalUnproductiveHours, getTotalMissingHours, getTotalNeutralHours, getYesterdayResult, deleteTask, yesterdayDate, getResults, addMonthResults } from '../database';
 
 
 interface TasksContextType {
@@ -18,6 +18,7 @@ interface TasksContextType {
     yesterdayResult:string;
     deleteSingleTask:(id:number)=>Promise<void>;
     allResults:Result[];
+    // setResults:()=>Promise<void>;
 }
 
 const TasksContext = createContext<TasksContextType | undefined>(undefined);
@@ -34,6 +35,7 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     const fetchTasks = async () => {
         const allTasks = await getTasks();
+        setResults();
         setTasks(allTasks);
         fetchProductive();
     };
@@ -82,12 +84,20 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setAllResults(data)
         
     }
+
+    const setResults = async() => {
+        const CURRENT_MONTH = new Date().getMonth() + 1
+        const CURRENT_YEAR = new Date().getFullYear()
+        await addMonthResults(CURRENT_MONTH,CURRENT_YEAR)
+        getAllResults();
+    }
     useEffect(() => {
         fetchTasks(); 
         fetchProductive();
         fetchResult();
         fetchYesterdayResult();
         getAllResults();
+        setResults();
         
         
     }, []);
