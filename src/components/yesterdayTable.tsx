@@ -104,10 +104,8 @@ const YesterdayTable = () => {
                         </View>
                         </View>
                         <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.deleteButton} onPress={() => {setModalVisible(false)}}>    
-                            <Text style={{color:'white'}}>Delete</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.closeModal}>
+         
+                    <TouchableOpacity style={styles.closeModal} onPress={()=>setModalVisible(false)}>
                         <Text>Close</Text>
                     </TouchableOpacity>
                 </View>
