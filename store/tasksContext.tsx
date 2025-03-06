@@ -51,7 +51,7 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const fetchProductive = async () => {
         const productive : any = await getTotalProductiveHours(new Date().toLocaleDateString());
         const Unproductive : any = await getTotalUnproductiveHours(new Date().toLocaleDateString());
-        const neutral : any = await getTotalNeutralHours();
+        const neutral : any = await getTotalNeutralHours(new Date().toLocaleDateString());
         const missing : any = await getTotalMissingHours();
         setProductive(productive[0].total);
         setUnproductive(Unproductive[0].total);
@@ -81,6 +81,7 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     const getAllResults = async() => {
         const data :Result[]|any = await getResults();
+
         setAllResults(data)
         
     }
