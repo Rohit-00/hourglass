@@ -12,8 +12,7 @@ export const createTable = async () => {
 
     await db.execAsync(`
         PRAGMA journal_mode = WAL;
-
-        CREATE TABLE IF NOT EXISTS daily_result (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, result TEXT);
+        CREATE TABLE IF NOT EXISTS results (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT UNIQUE, result TEXT);
         CREATE TABLE IF NOT EXISTS all_tasks (id INTEGER PRIMARY KEY AUTOINCREMENT ,date TEXT,title TEXT NOT NULL, duration INTEGER, percentage INTEGER, tag TEXT, start_time TEXT, end_time TEXT);
         `);}catch(e){
             console.log(e)
@@ -136,24 +135,19 @@ export const getYesterdayTasks = async() => {
 }
 
 export const addResult = async(date:string,result:string) => {
-    try{
-    const data = await db.getFirstAsync('SELECT * FROM daily_result WHERE date = ?',date)
-    if(data === null){
+  
         const res = await db.runAsync(
-            'INSERT INTO daily_result (date, result) VALUES (?, ?)'
+            'INSERT INTO results (date, result) VALUES (?, ?)'
             , date,result);
     
         return res
-    }}catch(e){
-        console.log(e)
-    }
-    return null
+  
 
 }
 
 export const getResults = async() => {
     const CURRENT_MONTH = new Date().getMonth() + 1
-    const allRows:Result[] = await db.getAllAsync(`SELECT * FROM daily_result`);
+    const allRows:Result[] = await db.getAllAsync(`SELECT * FROM results WHERE date LIKE ?`,[`${CURRENT_MONTH}%`]);
     return allRows
 }
 
@@ -167,7 +161,7 @@ export const getResults = async() => {
     }
 
 export const getResult = async(date:string) => {
-    const result = await db.getFirstAsync(`SELECT * FROM daily_result WHERE date = ?`,date)
+    const result = await db.getFirstAsync(`SELECT * FROM results WHERE date = ?`,date)
     return result
 }
 const resultCache = new Map<string, any>();
@@ -180,12 +174,12 @@ export const addMonthResults = async (currentMonth: number, currentYear: number)
         const key = `${currentMonth}/${i}/${currentYear}`;
 
         if (resultCache.has(key)) {
-            data.push(resultCache.get(key));
+         
             continue;
         }
 
         let currentResult: Result | any = await getResult(key);
-
+        
         if (currentResult === null) {
             currentResult = await fetchResult(key);
             await addResult(key,currentResult)
@@ -204,7 +198,7 @@ export const getThisMonthProductiveDays = async() => {
     const CURRENT_YEAR = new Date().getFullYear()
     try{
         const productiveCount: any = await db.getAllAsync(
-            "SELECT COUNT(*) as total FROM daily_result WHERE result = ? AND date LIKE ? AND date LIKE ?",
+            "SELECT COUNT(*) as total FROM results WHERE result = ? AND date LIKE ? AND date LIKE ?",
             ["Productive", `${CURRENT_MONTH}%`,`%${CURRENT_YEAR}`]
           );
           
@@ -220,7 +214,7 @@ export const getLastMonthProductiveDays = async() => {
     const CURRENT_YEAR = new Date().getFullYear()
     try{
         const productiveCount: any = await db.getAllAsync(
-            "SELECT COUNT(*) as total FROM daily_result WHERE result = ? AND date LIKE ? AND date LIKE ?",
+            "SELECT COUNT(*) as total FROM results WHERE result = ? AND date LIKE ? AND date LIKE ?",
             ["Productive", `${LAST_MONTH}%`,`%${CURRENT_YEAR}`]
           );
           
@@ -230,4 +224,18 @@ export const getLastMonthProductiveDays = async() => {
     console.log(e)
     }
 
+}
+
+export const getLastMonthResultsNumber = async() => {
+    const LAST_MONTH = new Date().getMonth() 
+    try{
+
+    
+    const allRows:Result[] = await db.getAllAsync(`SELECT * FROM results WHERE result = ? AND DATE LIKE ?`,
+        ["Productive",`${LAST_MONTH}%`]
+    );
+    return allRows.length
+}catch(e){
+    console.log(e)
+}
 }
