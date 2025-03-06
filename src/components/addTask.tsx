@@ -4,7 +4,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Entypo from '@expo/vector-icons/Entypo';
 import { useCallback, useMemo, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { addMonthResults, addTask, deleteTask, getMissingPercentage, getNeutralPercentage, getOneTask, getProductivePercentage, getResult, getResults, getTotalMissingHours, getTotalProductiveHours, getUnproductivePercentage} from "../../database";
+import { addMonthResults, addTask, deleteTask, getLastMonthResultsNumber, getMissingPercentage, getNeutralPercentage, getOneTask, getProductivePercentage, getResult, getResults, getTasks, getTotalMissingHours, getTotalProductiveHours, getUnproductivePercentage} from "../../database";
 import { useTasks } from "../../store/tasksContext";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { convertTimeDifferenceToNumber, timeDifference } from "../../utils/dateHelpers";
@@ -36,7 +36,6 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
         const currentDate = new Date().toLocaleDateString();
         const difference = convertTimeDifferenceToNumber(timeDifference(startTime,endTime));
         await createTask(currentDate,task,difference.toString(),percentage,moodValue,startTime,endTime);
-
         bottomSheetModalRef.current?.close();
     }
     return(
@@ -61,7 +60,7 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
                     value={new Date(startTime)}
                     mode="time"
                     is24Hour={false}
-                    display="default"
+                    display="spinner"
                     onChange={(event, selectedDate) => {
                         const currentDate = selectedDate || startTime;
                         setShowStartTimePicker(false);
@@ -80,7 +79,7 @@ export const AddTask:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
                     mode="time"
                     
                     is24Hour={false}
-                    display="default"
+                    display="spinner"
                     onChange={(event, selectedDate) => {
                         const currentDate = selectedDate || endTime;
                         setShowEndTimePicker(false);
