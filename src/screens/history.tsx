@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Calendar } from 'react-native-calendars';
 import { colors } from '../../utils/colors';
 import ProdData from '../components/prodData';
 import YesterdayTable from '../components/yesterdayTable';
-import { addResult } from '../../database';
+import { addResult, getLastMonthProductiveDays, getThisMonthProductiveDays } from '../../database';
 import { useTasks } from '../../store/tasksContext';
 
 function formatDate(inputDate:string) {
@@ -14,30 +14,28 @@ function formatDate(inputDate:string) {
 const History = () => {
 const {allResults} = useTasks();
 
+const [results , setResults] = useState<Result[]>()
 
-//creating an object for marking the dates on calendar
+const obj: any = {};
 
-  const obj: any = {};
-  allResults.map((item) => {
-  
-      obj[formatDate(item.date)] = {selected:true,marked:true,selectedColor:item.result==="Productive"?colors.positive:colors.negative}
-      
-  });
+useEffect(()=>{
+  setResults(allResults)
+},[allResults])
 
-
-
+results&&results.map((item) => {
+  if(item.result!=="Missing"){
+    obj[formatDate(item.date)] = {selected:true,selectedColor:item.result==="Productive"?colors.positive:colors.negative}
+  }
+});
 
   return (
     <View style={styles.container}>
 
       <Calendar
-      enableSwipeMonths={true}
-      onMonthChange={(months:any)=>{console.log(months)}}
+      hideExtraDays={true}
+      hideArrows={true}
       markedDates={obj}
       style={styles.calendarContainer}
-  onDayPress={(day:any) => {
-    console.log('selected day', day);
-  }}
         />
     <ProdData/>
     <YesterdayTable/>
