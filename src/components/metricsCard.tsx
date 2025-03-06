@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import { colors } from '../../utils/colors';
 import { convertToTimeDuration } from '../../utils/dateHelpers';
 import { useTasks } from '../../store/tasksContext';
-import { getTotalMissingHours, getTotalNeutralHours, getTotalProductiveHours, getTotalUnproductiveHours, getYesterdayMissingHours, yesterdayDate } from '../../database';
+import { getTotalNeutralHours, getTotalProductiveHours, getTotalUnproductiveHours, getYesterdayMissingHours, yesterdayDate } from '../../database';
 
 interface MetricCardProps {
   title:string;
@@ -29,7 +29,7 @@ const MetricsCard:React.FC<MetricCardProps> = ({title,day}) => {
     }
     fetchYesterday()
   })
-  console.log(yesterdayMissing)
+
 
   return (
       <View style={styles.container}>
