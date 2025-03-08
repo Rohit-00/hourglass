@@ -7,6 +7,7 @@
     "icon": "./assets/hourglass.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "jsEngine":"hermes",
     "splash": {
       "image": "./assets/hourglass.png",
       "resizeMode": "contain",
