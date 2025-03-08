@@ -1,5 +1,3 @@
-// context/TimeContext.tsx
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -14,8 +12,8 @@ interface TimeContextType {
 const TimeContext = createContext<TimeContextType | undefined>(undefined);
 
 export const TimeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [bedtime, setBedtimeState] = useState<string | null>(null);
-    const [wakeupTime, setWakeupTimeState] = useState<string | null>(null);
+    const [bedtime, setBedtimeState] = useState<string | null>('');
+    const [wakeupTime, setWakeupTimeState] = useState<string | null>('');
 
     const fetchTimes = async () => {
         const storedBedtime = await AsyncStorage.getItem('bedtime');
@@ -35,7 +33,7 @@ export const TimeProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     useEffect(() => {
-        fetchTimes(); // Fetch times when the provider mounts
+        fetchTimes(); 
     }, []);
 
     return (
