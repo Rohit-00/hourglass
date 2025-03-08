@@ -45,18 +45,18 @@ export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunction
         <View style={styles.edit}>
         <TouchableOpacity  onPress={handlePresentModalPress}>
 
-        <Entypo name="dots-three-horizontal" size={24} color="black"/>
+        <Entypo name="dots-three-horizontal" size={24} color="white"/>
  
         </TouchableOpacity>
         </View>
-        <CircularProgress size={240} progress={60} progressColor={colors.primary} backgroundColor={colors.border}/>
+        <CircularProgress outerStrokeWidth={20} size={240} strokeWidth={20} backgroundColor={'#C7D1E8'} progressColor={'#28B6F4'} />
         
 
         
         <View style={styles.iconContainer}>
 
         <View style={styles.icon}>
-        <MaterialIcons name="access-alarm" size={40} color={colors.text} />
+        <MaterialIcons name="access-alarm" size={40} color={"white"} />
         <View style={{flexDirection:'column'}}>
         <Text style={styles.text}>Wake Up</Text>
         <Text style={styles.time}>{wakeupTime}</Text>
@@ -64,7 +64,7 @@ export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunction
         </View>
 
         <View style={styles.icon}>
-        <Fontisto name="night-clear" size={34} color={colors.text} />
+        <Fontisto name="night-clear" size={34} color={"white"} />
         <View style={{flexDirection:'column'}}>
         <Text style={styles.text}>Bedtime</Text>
         <Text style={styles.time}>{bedtime}</Text>
@@ -85,10 +85,11 @@ const styles = StyleSheet.create({
     padding:20,
     width:'100%',
     marginTop:50,
-    backgroundColor:colors.background,
+    backgroundColor:colors.primary,
     borderRadius:10,
-    borderColor:colors.border,
-    borderWidth:0.5,
+    elevation:5,
+    shadowOffset:{height:5,width:5},
+    shadowColor:'#D4D4D4',
     alignItems:'center'
   },
   iconContainer:{
@@ -104,12 +105,12 @@ const styles = StyleSheet.create({
   },
   text:{
     fontSize:14,
-    color:colors.text
+    color:"white"
   },
   time:{
     fontSize:16,
     fontWeight:'bold',
-    color:colors.text
+    color:"white"
   },
   edit:{
     width:'100%',

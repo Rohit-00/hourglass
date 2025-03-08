@@ -34,26 +34,32 @@ const MetricsCard:React.FC<MetricCardProps> = ({title,day}) => {
   return (
       <View style={styles.container}>
         <View style={styles.statsCard}> 
-          <Text style={styles.headerText}>{title}</Text>
+          <Text style={styles.headerText}>{title} :</Text>
           <View style={styles.tableContainer}>
             <View style={styles.tableRow}>
               <Text style={styles.label}>Productive</Text>
               <Text style={[styles.value, { color: '#00C896' }]}>{convertToTimeDuration(day==="today"?productive:yesterdayProd!)}</Text>
             </View>
+            <View style={{height:1,width:'80%',backgroundColor:colors.border}}/>
             <View style={styles.tableRow}>
               <Text style={styles.label}>Unproductive</Text>
               <Text style={[styles.value, { color: '#E05E5E' }]}>{convertToTimeDuration(day==="today"?unproductive:yesterdayUnprod!)}</Text>
             </View>
+            <View style={{height:1,width:'80%',backgroundColor:colors.border}}/>
             <View style={styles.tableRow}>
               <Text style={styles.label}>Neutral</Text>
               <Text style={[styles.value, { color: '#808080' }]}>{convertToTimeDuration(day==="today"?neutral:yesterdayNeutral!)}</Text>
             </View>
+            <View style={{height:1,width:'80%',backgroundColor:colors.border}}/>
             <View style={styles.tableRow}>
               <Text style={styles.label}>Missing</Text>
               <Text style={[styles.value, { color: '#FFB800' }]}>{convertToTimeDuration(day==="today"?missing:yesterdayMissing!)}</Text>
             </View>
+            <View style={{height:1,width:'80%',backgroundColor:colors.border}}/>
           </View>
+
           </View>
+          
       </View>
 
   );
@@ -61,7 +67,7 @@ const MetricsCard:React.FC<MetricCardProps> = ({title,day}) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 200,
+    height: 340,
     marginBottom: 15,
     width: '100%',
   },
@@ -72,13 +78,15 @@ const styles = StyleSheet.create({
     marginTop: 15,
     backgroundColor: colors.background,
     borderRadius: 10,
-    borderColor: colors.border,
-    borderWidth: 0.5,
     position: 'absolute',
     backfaceVisibility: 'hidden',
+    elevation:5,
+    shadowOffset:{height:5,width:5},
+    shadowColor:'#D4D4D4'
+    
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 5,
     color: '#333',
@@ -88,9 +96,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+
+    alignItems: 'flex-start',
     paddingVertical: 5,
   },
   label: {
@@ -98,7 +105,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   value: {
-    fontSize: 16,
+    fontSize: 26,
     fontWeight: 'bold',
   },
 });
