@@ -1,29 +1,29 @@
 {
   "expo": {
-    "name": "tickdown",
-    "slug": "tickdown",
+    "name": "Hourglass",
+    "slug": "Hourglass",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/hourglass.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/hourglass.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#407AFF"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/hourglass.png",
+        "backgroundColor": "#407AFF"
       },
       "package": "com.rohit965.tickdown"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/hourglass.png"
     },
     "plugins": [
       "expo-sqlite"
