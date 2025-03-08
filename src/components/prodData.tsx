@@ -72,8 +72,9 @@ const styles = StyleSheet.create({
         height:100,
         backgroundColor:"white",
         borderRadius:10,
-        borderColor:colors.border,
-        borderWidth:0.5,
+        elevation:5,
+        shadowOffset:{height:5,width:5},
+        shadowColor:'#D4D4D4'
     },
     heading:{
         fontSize:20,
