@@ -1,15 +1,9 @@
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import { TimeRem } from "./src/components/timeRem";
-import Table from "./src/components/table";
+import {StyleSheet} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import BottomSheet, { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Entypo from '@expo/vector-icons/Entypo';
-import { addTask, createTable, getTasks } from "./database";
+import {useEffect} from "react";
+import {createTable} from "./database";
 import { TasksProvider } from "./store/tasksContext";
 import { TimeProvider } from "./store/timeContext";
-import BentoGrid from "./src/components/bentoGrid";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "./src/screens/home";
@@ -30,8 +24,6 @@ export default function App() {
     }
     initDB()
   })
-
-
 
   return (
     <TimeProvider> 
