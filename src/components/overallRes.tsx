@@ -28,8 +28,9 @@ const styles = StyleSheet.create({
         marginTop:15,
         backgroundColor:colors.background,
         borderRadius:10,
-        borderColor:colors.border,
-        borderWidth:0.5,
+        elevation:5,
+        shadowOffset:{height:5,width:5},
+        shadowColor:'#D4D4D4',
         backfaceVisibility: 'hidden',
         alignItems:'center',
         justifyContent:'center'
