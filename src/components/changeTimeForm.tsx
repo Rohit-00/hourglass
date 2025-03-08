@@ -1,8 +1,8 @@
-import { View, Text, TextInput , StyleSheet, TouchableOpacity} from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity} from "react-native"
 import { colors } from "../../utils/colors"
 import Fontisto from '@expo/vector-icons/Fontisto';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useTime } from "../../store/timeContext";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -36,28 +36,6 @@ export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
         <View style={styles.container}>
             <Text style={styles.heading}>Change Time Form</Text>
             
-            <TouchableOpacity style={styles.inputContainer} onPress={()=>setShowBedtimePicker(true)}>
-            <Text 
-            style={styles.placeholder} 
-            
-            >
-                {bedtimeInput?bedtimeInput:'Bedtime'}
-                </Text>
-            {showBedtimePicker && (
-                <DateTimePicker
-                    value={new Date(bedtimeInput)}
-                    mode="time"
-                    is24Hour={false}
-                    display="default"
-                    onChange={(event, selectedDate) => {
-                        const currentDate = selectedDate || bedtimeInput;
-                        setShowBedtimePicker(false);
-                        setBedtimeInput(new Date(currentDate.toString().replace(/^"+|"+$/g, '')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
-                    }}
-                />
-            )}
-            <Fontisto name="night-clear" size={20} color={colors.text} style={{opacity:0.7}}/>
-            </TouchableOpacity>
 
             <TouchableOpacity style={styles.inputContainer} onPress={()=>setShowWakeupPicker(true)}>
             <Text 
@@ -70,7 +48,7 @@ export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
                     value={new Date(wakeupTimeInput)}
                     mode="time"
                     is24Hour={false}
-                    display="default"
+                    display="spinner"
                     onChange={(event, selectedDate) => {
                         const currentDate = selectedDate || wakeupTimeInput;
                         setShowWakeupPicker(false);
@@ -83,7 +61,30 @@ export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
                 <MaterialIcons name="access-alarm" size={26} color={colors.text} style={{opacity:0.7}}/>
            
             </TouchableOpacity>
+
+            <TouchableOpacity style={styles.inputContainer} onPress={()=>setShowBedtimePicker(true)}>
+            <Text 
+            style={styles.placeholder} 
             
+            >
+                {bedtimeInput?bedtimeInput:'Bedtime'}
+                </Text>
+            {showBedtimePicker && (
+                <DateTimePicker
+                    value={new Date(bedtimeInput)}
+                    mode="time"
+                    is24Hour={false}
+                    display="spinner"
+                    onChange={(event, selectedDate) => {
+                        const currentDate = selectedDate || bedtimeInput;
+                        setShowBedtimePicker(false);
+                        setBedtimeInput(new Date(currentDate.toString().replace(/^"+|"+$/g, '')).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
+                    }}
+                />
+            )}
+            <Fontisto name="night-clear" size={20} color={colors.text} style={{opacity:0.7}}/>
+            </TouchableOpacity>
+      
         
         <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.cancelButton} onPress={handlePresentModalPress}>

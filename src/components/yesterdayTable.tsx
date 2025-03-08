@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { colors } from '../../utils/colors'
 import AntDesign from '@expo/vector-icons/AntDesign';
 

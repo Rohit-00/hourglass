@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Animated, StyleSheet, Easing } from 'react-native';
+import { View, Animated, StyleSheet, Easing} from 'react-native';
 import Svg, { Circle, G, Text } from 'react-native-svg';
 import { useTime } from '../../store/timeContext';
 import { getPercentage, timeDifference } from '../../utils/dateHelpers';

@@ -11,10 +11,10 @@ interface MetricCardProps {
 }
 const MetricsCard:React.FC<MetricCardProps> = ({title,day}) => {
   const {productive, unproductive, neutral, missing} = useTasks()
-  const [yesterdayProd,setYesterdayProd] = useState();
-  const [yesterdayUnprod, setYesterdayUnprod] = useState<number>();
-  const [yesterdayNeutral, setYesterdayNeutral] = useState();
-  const [yesterdayMissing,setYesterdayMissing] = useState();
+  const [yesterdayProd,setYesterdayProd] = useState<number>(0);
+  const [yesterdayUnprod, setYesterdayUnprod] = useState<number>(0);
+  const [yesterdayNeutral, setYesterdayNeutral] = useState<number>(0);
+  const [yesterdayMissing,setYesterdayMissing] = useState<number>(0);
 
   title!=="today"&&useEffect(()=>{
     const fetchYesterday = async() => {
