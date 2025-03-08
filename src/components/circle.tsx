@@ -136,7 +136,7 @@ const CircularProgress = ({
           fontSize="38"
           fontWeight="bold"
         >
-          {diff}
+          {diff?diff:'-'}
         </Text>
         <Text
           x={center}

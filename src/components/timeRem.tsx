@@ -59,7 +59,7 @@ export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunction
         <MaterialIcons name="access-alarm" size={40} color={"white"} />
         <View style={{flexDirection:'column'}}>
         <Text style={styles.text}>Wake Up</Text>
-        <Text style={styles.time}>{wakeupTime}</Text>
+        <Text style={styles.time}>{wakeupTime?wakeupTime:'-'}</Text>
         </View>
         </View>
 
@@ -67,7 +67,7 @@ export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunction
         <Fontisto name="night-clear" size={34} color={"white"} />
         <View style={{flexDirection:'column'}}>
         <Text style={styles.text}>Bedtime</Text>
-        <Text style={styles.time}>{bedtime}</Text>
+        <Text style={styles.time}>{bedtime?bedtime:'-'}</Text>
         </View>
         </View>
 
