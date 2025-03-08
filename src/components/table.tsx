@@ -5,6 +5,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTasks } from '../../store/tasksContext';
 import { convertToTimeDuration } from '../../utils/dateHelpers';
+import { truncateText } from '../../utils/helpers';
 
 interface ChildProps {
     bottomSheetModalRef: React.RefObject<BottomSheetModal>;
@@ -62,7 +63,7 @@ const {tasks, deleteSingleTask} = useTasks()
                             : item.tag === 'neutral' ? 'grey' 
                             : '#E05E5E'
                     }]} />
-                    <Text style={styles.titleText}>{item.title}</Text>
+                    <Text style={styles.titleText}>{truncateText(item.title,23)}</Text>
                 </View>
                 <View style={styles.durationColumn}>
                     <Text style={styles.cellText}>{convertToTimeDuration(item.duration)}</Text>
