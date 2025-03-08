@@ -9,6 +9,7 @@ import { AddTask } from "../../src/components/addTask";
 import { addTask, createTable, getTasks } from "../../database";
 import BentoGrid from "../components/bentoGrid";
 import { useRef, useState } from "react";
+import { colors } from "../../utils/colors";
 const Home = () => {
 
       const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -66,12 +67,13 @@ export default Home
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        paddingHorizontal: 15,
+        backgroundColor: colors.appBackground,
+        paddingHorizontal:15
       
       },
       container: {
         flex: 1,
-        backgroundColor: "#F8FAFB",
+        
       },
       contentContainer: {
         flex: 1,
