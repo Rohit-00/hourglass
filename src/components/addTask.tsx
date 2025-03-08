@@ -76,7 +76,7 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
       return 0;
     }
   };
-
+  
   // Handle form submission
   const handleSubmit = async (values: FormValues) => {
     const currentDate = new Date().toLocaleDateString();

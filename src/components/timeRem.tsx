@@ -50,9 +50,7 @@ export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunction
         </TouchableOpacity>
         </View>
         <CircularProgress outerStrokeWidth={20} size={240} strokeWidth={20} backgroundColor={'#C7D1E8'} progressColor={'#28B6F4'} />
-        
-
-        
+  
         <View style={styles.iconContainer}>
 
         <View style={styles.icon}>
