@@ -41,8 +41,9 @@ const {tasks, deleteSingleTask} = useTasks()
     <View style={styles.container}>
         <View style={styles.headingContainer}>
             <Text style={styles.heading}>{heading}</Text>
-            <TouchableOpacity onPress={handlePresentModalPress}>
-                <AntDesign name="pluscircle" size={24} color={colors.primary} />
+            <TouchableOpacity onPress={handlePresentModalPress} style={styles.button}>
+                <AntDesign name="plus" size={24} color={colors.primary} />
+                <Text style={styles.buttonText}>Add Task</Text>
             </TouchableOpacity>
         </View>
         <View>
@@ -154,6 +155,18 @@ const styles = StyleSheet.create({
         borderColor:colors.border,
         borderWidth:0.5,
    
+      },
+      button:{
+        flexDirection:'row',
+        alignItems:'center',
+        gap:4,
+        backgroundColor:`rgba(82,107,187,0.11)`,
+        padding:5,
+        paddingHorizontal:10,
+        borderRadius:10
+      },
+      buttonText:{
+        color:colors.primary
       },
       headingContainer:{
             flexDirection:'row',
