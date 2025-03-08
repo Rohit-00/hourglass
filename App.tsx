@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#F8FAFB",
+    backgroundColor: colors.appBackground,
   },
   contentContainer: {
     flex: 1,
