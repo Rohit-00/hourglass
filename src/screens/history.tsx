@@ -4,7 +4,6 @@ import { Calendar } from 'react-native-calendars';
 import { colors } from '../../utils/colors';
 import ProdData from '../components/prodData';
 import YesterdayTable from '../components/yesterdayTable';
-import { addResult, getLastMonthProductiveDays, getThisMonthProductiveDays } from '../../database';
 import { useTasks } from '../../store/tasksContext';
 
 function formatDate(inputDate:string) {
@@ -21,7 +20,6 @@ const obj: any = {};
 useEffect(()=>{
   setResults(allResults)
 },[allResults])
-
 results&&results.map((item) => {
   if(item.result!=="Missing"){
     obj[formatDate(item.date)] = {selected:true,selectedColor:item.result==="Productive"?colors.positive:colors.negative}
