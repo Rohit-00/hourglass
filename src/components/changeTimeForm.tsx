@@ -89,7 +89,7 @@ export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
         <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.cancelButton} onPress={handlePresentModalPress}>
             
-                <Text>Cancel</Text>
+                <Text style={{color:colors.text}}>Cancel</Text>
         
         </TouchableOpacity>
             <TouchableOpacity style={styles.updateButton} onPress={handleSaveTimes}>
@@ -107,7 +107,8 @@ const styles = StyleSheet.create({
         width:'100%',
         alignItems:'center',
         padding:20,
-        paddingHorizontal:30
+        paddingHorizontal:30,
+        paddingBottom:90
     },
     heading: {
         fontSize:16,
