@@ -1,12 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { TimeRem } from "../../src/components/timeRem";
 import Table from "../../src/components/table";
 
-import BottomSheet, { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
 import { ChangeTimeForm } from "../../src/components/changeTimeForm";
 import { AddTask } from "../../src/components/addTask";
-import { addTask, createTable, getTasks } from "../../database";
 import BentoGrid from "../components/bentoGrid";
 import { useRef, useState } from "react";
 import { colors } from "../../utils/colors";
@@ -28,21 +27,20 @@ const Home = () => {
     
   return (
     <View  style={styles.safeArea}>
-        <SafeAreaView>
+   
         <ScrollView showsVerticalScrollIndicator={false}>
           <StatusBar style="auto" />
-          <View style={styles.container}>
+        
             <TimeRem bottomSheetModalRef={bottomSheetModalRef} sendFunctionsToParent={handleReceiveChildFunctions} />
             <BentoGrid/>
             <Table heading="What Have I Done Today" bottomSheetModalRef={taskBottomSheetModalRef} sendFunctionsToParent={handleReceiveChildFunctions}/>
-            
-          </View>
+           
         </ScrollView>
-      </SafeAreaView>
+   
 
       {/* Bottom Sheet for changing bed and wake up time */}
       <BottomSheetModalProvider>
-        <BottomSheetModal ref={bottomSheetModalRef} aria-hidden>
+        <BottomSheetModal ref={bottomSheetModalRef} aria-hidden backgroundStyle={{backgroundColor:colors.background}}>
           <BottomSheetView style={styles.contentContainer}>
             <ChangeTimeForm bottomSheetModalRef={bottomSheetModalRef} />
           </BottomSheetView>
@@ -52,7 +50,7 @@ const Home = () => {
 
       {/* Bottom Sheet for adding tasks */}
       <BottomSheetModalProvider>
-        <BottomSheetModal ref={taskBottomSheetModalRef} aria-hidden>
+        <BottomSheetModal ref={taskBottomSheetModalRef} aria-hidden backgroundStyle={{backgroundColor:colors.background}}>
           <BottomSheetView style={styles.contentContainer}>
            <AddTask bottomSheetModalRef={taskBottomSheetModalRef}/>
           </BottomSheetView>
@@ -66,17 +64,12 @@ export default Home
 
 const styles = StyleSheet.create({
     safeArea: {
-        flex: 1,
-        backgroundColor: colors.appBackground,
-        paddingHorizontal:15
-      
-      },
-      container: {
-        flex: 1,
         
+        backgroundColor: colors.appBackground,
+        paddingHorizontal:15,
       },
+
       contentContainer: {
-        flex: 1,
         alignItems: "center",
         width: "100%",
       },
