@@ -1,4 +1,4 @@
-import {StyleSheet} from "react-native";
+import {Appearance, StyleSheet} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {useEffect} from "react";
 import {createTable} from "./database";
@@ -13,7 +13,7 @@ import { colors } from "./utils/colors";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
 const Tab = createBottomTabNavigator();
-
+const theme = Appearance.getColorScheme()
 export default function App() {
 
   //initialize the databse
@@ -31,11 +31,23 @@ export default function App() {
     <GestureHandlerRootView>
     <NavigationContainer>
     <Tab.Navigator screenOptions={({route})=>({
-      tabBarStyle:{
-        height:60, 
-        paddingTop:5,
-
-      },
+tabBarStyle: {
+  position: 'absolute',
+  bottom: 20, 
+  left: 20,
+  right: 20,
+  height: 60,
+  paddingTop: 5,
+  borderTopWidth: 0,
+  backgroundColor: colors.background,
+  borderRadius: 20,
+  shadowColor: "#000", 
+  shadowOffset: { width: 0, height: 5 },
+  shadowOpacity: 0.1,
+  shadowRadius: 10,
+  elevation: 5, 
+  marginHorizontal:80,
+},
   
       tabBarActiveTintColor:colors.primary,
       headerShown:false,
