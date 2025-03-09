@@ -8,7 +8,7 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/icon2.png",
+      "image": "./assets/icon3.png",
       "resizeMode": "contain",
       "backgroundColor": "#526BBB"
     },
@@ -21,7 +21,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon2.png",
+        "foregroundImage": "./assets/icon3.png",
         "backgroundColor": "#526BBB"
       },
       "package": "com.rohit965.tickdown"
