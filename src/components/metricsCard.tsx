@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { colors } from '../../utils/colors';
-import { convertToTimeDuration } from '../../utils/dateHelpers';
+import { convertToTimeDuration, formattedYesterday } from '../../utils/dateHelpers';
 import { useTasks } from '../../store/tasksContext';
-import { getTotalNeutralHours, getTotalProductiveHours, getTotalUnproductiveHours, getYesterdayMissingHours, yesterdayDate } from '../../database';
+import { getTotalNeutralHours, getTotalProductiveHours, getTotalUnproductiveHours, getYesterdayMissingHours } from '../../database';
 
 interface MetricCardProps {
   title:string;
@@ -18,9 +18,9 @@ const MetricsCard:React.FC<MetricCardProps> = ({title,day}) => {
 
   title!=="today"&&useEffect(()=>{
     const fetchYesterday = async() => {
-      const yesterdayHours : any = await getTotalProductiveHours(yesterdayDate)
-      const yesterdayUnprodHours : any = await getTotalUnproductiveHours(yesterdayDate)
-      const yesterdayNeutral : any = await getTotalNeutralHours(yesterdayDate)
+      const yesterdayHours : any = await getTotalProductiveHours(formattedYesterday)
+      const yesterdayUnprodHours : any = await getTotalUnproductiveHours(formattedYesterday)
+      const yesterdayNeutral : any = await getTotalNeutralHours(formattedYesterday)
       const yesterdayMissingHours : any = await getYesterdayMissingHours()
       setYesterdayProd(yesterdayHours[0].total)
       setYesterdayUnprod(yesterdayUnprodHours[0].total)

@@ -6,15 +6,15 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { convertTimeDifferenceToNumber, timeDifference } from "../../utils/dateHelpers";
+import { convertTimeDifferenceToNumber, formattedToday, timeDifference } from "../../utils/dateHelpers";
 import { useTasks } from "../../store/tasksContext";
 import { useTime } from "../../store/timeContext";
+import { getResults, getTasks, getYesterdayTasks } from "../../database";
 
 interface ChildProps {
   bottomSheetModalRef: React.RefObject<BottomSheetModal>;
 }
 
-// Define validation schema using Yup
 const TaskValidationSchema = Yup.object().shape({
   task: Yup.string()
     .required('Task name is required')
@@ -43,7 +43,6 @@ const TaskValidationSchema = Yup.object().shape({
     .oneOf(['Productive', 'neutral', 'Unproductive'], 'Invalid work type')
 });
 
-// Define form initial values interface
 interface FormValues {
   task: string;
   startTime: string;
@@ -59,11 +58,12 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
   const { createTask } = useTasks();
   const { fetchTimes, bedtime, wakeupTime } = useTime();
 
-  const handleClose = useCallback(() => {
+  const handleClose = useCallback(async () => {
     bottomSheetModalRef.current?.close();
+    const data = await getTasks();
+    console.log(data)
   }, []);
 
-  // Calculate percentage based on time difference
   const calculatePercentage = (startTime: string, endTime: string): number => {
     try {
       if (!startTime || !endTime || !wakeupTime || !bedtime) return 0;
@@ -76,14 +76,12 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
       return 0;
     }
   };
-  
-  // Handle form submission
+
   const handleSubmit = async (values: FormValues) => {
-    const currentDate = new Date().toLocaleDateString();
     const difference = convertTimeDifferenceToNumber(timeDifference(values.startTime, values.endTime));
     
     await createTask(
-      currentDate,
+      formattedToday,
       values.task,
       difference.toString(),
       values.percentage,
@@ -91,11 +89,11 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
       values.startTime,
       values.endTime
     );
-    
+
+
     handleClose();
   };
 
-  // Initial form values
   const initialValues: FormValues = {
     task: '',
     startTime: '',
@@ -114,7 +112,6 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
         <View style={styles.container}>
           <Text style={styles.heading}>Add Task</Text>
           
-          {/* Task Input */}
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
@@ -127,7 +124,6 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
             <Text style={styles.errorText}>{errors.task}</Text>
           )}
 
-          {/* Time Inputs */}
           <View style={styles.dateContainer}>
             <TouchableOpacity 
               style={[
@@ -154,7 +150,6 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
             </TouchableOpacity>
           </View>
           
-          {/* Time Picker Error Messages */}
           <View style={styles.errorContainer}>
             <View style={{ width: '46%' }}>
               {touched.startTime && errors.startTime && (
@@ -168,7 +163,6 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
             </View>
           </View>
 
-          {/* Start Time Picker */}
           {showStartTimePicker && (
             <DateTimePicker
               value={values.startTime ? new Date(values.startTime) : new Date()}
@@ -193,7 +187,6 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
             />
           )}
 
-          {/* End Time Picker */}
           {showEndTimePicker && (
             <DateTimePicker
               value={values.endTime ? new Date(values.endTime) : new Date()}
@@ -217,7 +210,6 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
             />
           )}
 
-          {/* Work Type Picker */}
           <View style={styles.pickerWrapper}>
             <Text style={styles.label}>Work Type</Text>
             <View style={[
@@ -239,13 +231,10 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
             )}
           </View>
 
-          {/* Percentage Display */}
           <View style={styles.percentageContainer}>
             <Text>{values.percentage}% </Text>
             <Text>of your working hours</Text>
           </View>
-
-          {/* Buttons */}
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.cancelButton} onPress={handleClose}>
               <Text>Cancel</Text>
