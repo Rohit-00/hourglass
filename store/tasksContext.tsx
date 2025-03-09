@@ -1,7 +1,8 @@
 // context/TasksContext.tsx
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import {addResult, getTasks, addTask, getTotalProductiveHours, getTotalUnproductiveHours, getTotalMissingHours, getTotalNeutralHours, getYesterdayResult, deleteTask, yesterdayDate, getResults, addMonthResults } from '../database';
+import {addResult, getTasks, addTask, getTotalProductiveHours, getTotalUnproductiveHours, getTotalMissingHours, getTotalNeutralHours, getYesterdayResult, deleteTask, getResults, addMonthResults } from '../database';
+import { formattedToday } from '../utils/dateHelpers';
 
 
 interface TasksContextType {
@@ -49,9 +50,9 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
 
     const fetchProductive = async () => {
-        const productive : any = await getTotalProductiveHours(new Date().toLocaleDateString());
-        const Unproductive : any = await getTotalUnproductiveHours(new Date().toLocaleDateString());
-        const neutral : any = await getTotalNeutralHours(new Date().toLocaleDateString());
+        const productive : any = await getTotalProductiveHours(formattedToday);
+        const Unproductive : any = await getTotalUnproductiveHours(formattedToday);
+        const neutral : any = await getTotalNeutralHours(formattedToday);
         const missing : any = await getTotalMissingHours();
         setProductive(productive[0].total);
         setUnproductive(Unproductive[0].total);
@@ -60,8 +61,8 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
 
     const fetchResult = async () => {
-        const productive : any = await getTotalProductiveHours(new Date().toLocaleDateString());
-        const Unproductive : any = await getTotalUnproductiveHours(new Date().toLocaleDateString());
+        const productive : any = await getTotalProductiveHours(formattedToday);
+        const Unproductive : any = await getTotalUnproductiveHours(formattedToday);
         const missing : any = await getTotalMissingHours();
         const result = productive[0].total > Unproductive[0].total ? 'Productive'  : 'Unproductive';
         setResult(result);
