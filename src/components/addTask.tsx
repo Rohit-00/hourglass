@@ -60,8 +60,6 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
 
   const handleClose = useCallback(async () => {
     bottomSheetModalRef.current?.close();
-    const data = await getTasks();
-    console.log(data)
   }, []);
 
   const calculatePercentage = (startTime: string, endTime: string): number => {
@@ -117,6 +115,7 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
               style={styles.input}
               placeholder="Task"
               value={values.task}
+              placeholderTextColor={colors.text}
               onChangeText={handleChange('task')}
             />
           </View>
@@ -201,8 +200,7 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
                   
                   setFieldValue('endTime', formattedTime);
                   fetchTimes();
-                  
-                  // Update percentage
+
                   const newPercentage = calculatePercentage(values.startTime, formattedTime);
                   setFieldValue('percentage', newPercentage);
                 }
@@ -217,13 +215,16 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
               touched.moodValue && errors.moodValue ? styles.inputError : null
             ]}>
               <Picker
+                mode="dropdown"
                 selectedValue={values.moodValue}
                 onValueChange={(itemValue) => setFieldValue('moodValue', itemValue)}
                 style={styles.picker}
+                numberOfLines={1}
+                dropdownIconColor={colors.text}
               >
-                <Picker.Item label="Productive" value="Productive" style={{ color: colors.text }} />
-                <Picker.Item label="Neutral" value="neutral" style={{ color: colors.text }} />
-                <Picker.Item label="Unproductive" value="Unproductive" style={{ color: colors.text }} />
+                <Picker.Item label="Productive" value="Productive" style={{ color: colors.text,backgroundColor:colors.background }} />
+                <Picker.Item label="Neutral" value="neutral" style={{ color: colors.text ,backgroundColor:colors.background }} />
+                <Picker.Item label="Unproductive" value="Unproductive" style={{ color: colors.text ,backgroundColor:colors.background}} />
               </Picker>
             </View>
             {touched.moodValue && errors.moodValue && (
@@ -232,12 +233,12 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
           </View>
 
           <View style={styles.percentageContainer}>
-            <Text>{values.percentage}% </Text>
-            <Text>of your working hours</Text>
+            <Text  style={{color:colors.text}}>{values.percentage}% </Text>
+            <Text style={{color:colors.text}}>of your working hours</Text>
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.cancelButton} onPress={handleClose}>
-              <Text>Cancel</Text>
+              <Text  style={{color:colors.text}}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={[styles.updateButton, !isValid && styles.disabledButton]} 
@@ -258,7 +259,8 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     padding: 20,
-    paddingHorizontal: 30
+    paddingHorizontal: 30,
+    paddingBottom:90
   },
   heading: {
     fontSize: 16,
@@ -269,6 +271,7 @@ const styles = StyleSheet.create({
   input: {
     width: '90%',
     height: '100%',
+    color:colors.text
   },
   placeholder: {
     color: colors.text
@@ -340,11 +343,12 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     width: '100%',
+
   },
   label: {
     marginLeft: 5,
     marginBottom: 5,
-    color: '#333',
+    color: colors.text
   },
   percentageContainer: {
     flexDirection: 'row',
