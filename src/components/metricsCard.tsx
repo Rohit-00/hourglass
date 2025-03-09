@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Appearance } from 'react-native';
 import { colors } from '../../utils/colors';
 import { convertToTimeDuration, formattedYesterday } from '../../utils/dateHelpers';
 import { useTasks } from '../../store/tasksContext';
 import { getTotalNeutralHours, getTotalProductiveHours, getTotalUnproductiveHours, getYesterdayMissingHours } from '../../database';
+
+const theme = Appearance.getColorScheme()
 
 interface MetricCardProps {
   title:string;
@@ -40,22 +42,22 @@ const MetricsCard:React.FC<MetricCardProps> = ({title,day}) => {
               <Text style={styles.label}>Productive</Text>
               <Text style={[styles.value, { color: '#00C896' }]}>{convertToTimeDuration(day==="today"?productive:yesterdayProd!)}</Text>
             </View>
-            <View style={{height:1,width:'80%',backgroundColor:colors.border}}/>
+            <View style={{height:1,width:'80%',backgroundColor:colors.text}}/>
             <View style={styles.tableRow}>
               <Text style={styles.label}>Unproductive</Text>
               <Text style={[styles.value, { color: '#E05E5E' }]}>{convertToTimeDuration(day==="today"?unproductive:yesterdayUnprod!)}</Text>
             </View>
-            <View style={{height:1,width:'80%',backgroundColor:colors.border}}/>
+            <View style={{height:1,width:'80%',backgroundColor:colors.text}}/>
             <View style={styles.tableRow}>
               <Text style={styles.label}>Neutral</Text>
               <Text style={[styles.value, { color: '#808080' }]}>{convertToTimeDuration(day==="today"?neutral:yesterdayNeutral!)}</Text>
             </View>
-            <View style={{height:1,width:'80%',backgroundColor:colors.border}}/>
+            <View style={{height:1,width:'80%',backgroundColor:colors.text}}/>
             <View style={styles.tableRow}>
               <Text style={styles.label}>Missing</Text>
               <Text style={[styles.value, { color: '#FFB800' }]}>{convertToTimeDuration(day==="today"?missing:yesterdayMissing!)}</Text>
             </View>
-            <View style={{height:1,width:'80%',backgroundColor:colors.border}}/>
+            <View style={{height:1,width:'80%',backgroundColor:colors.text}}/>
           </View>
 
           </View>
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     position: 'absolute',
     backfaceVisibility: 'hidden',
-    elevation:5,
+    elevation:theme==="dark"?0:5,
     shadowOffset:{height:5,width:5},
     shadowColor:'#D4D4D4'
     
@@ -89,7 +91,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 5,
-    color: '#333',
+    color:colors.text
+
   },
   tableContainer: {
     flex: 1,
@@ -102,7 +105,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: '#333',
+    color:colors.text
   },
   value: {
     fontSize: 26,

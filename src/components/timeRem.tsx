@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, Appearance } from "react-native"
 import CircularProgress from "./circle"
 import { colors } from "../../utils/colors";
 import Fontisto from '@expo/vector-icons/Fontisto';
@@ -8,6 +8,8 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useEffect, useRef, useState } from "react";
 import { useCallback } from "react";
 import { useTime } from "../../store/timeContext";
+
+const theme = Appearance.getColorScheme()
 
 interface ChildProps {
   bottomSheetModalRef: React.RefObject<BottomSheetModal>;
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
     backgroundColor: colors.primary,
     borderRadius: 10,
-    elevation: 5,
+    elevation: theme==="dark"?0:5,
     shadowOffset: {height: 5, width: 5},
     shadowColor: '#D4D4D4',
     alignItems: 'center'

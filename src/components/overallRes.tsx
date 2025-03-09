@@ -1,7 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Appearance, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { colors } from '../../utils/colors'
 import { useTasks } from '../../store/tasksContext'
+
+const theme = Appearance.getColorScheme()
 
 interface ResultProps {
     heading : string;
@@ -28,7 +30,7 @@ const styles = StyleSheet.create({
         marginTop:15,
         backgroundColor:colors.background,
         borderRadius:10,
-        elevation:5,
+        elevation:theme==="dark"?0:5,
         shadowOffset:{height:5,width:5},
         shadowColor:'#D4D4D4',
         backfaceVisibility: 'hidden',

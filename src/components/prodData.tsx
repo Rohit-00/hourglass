@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Appearance, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { colors } from '../../utils/colors'
 import { useTasks } from '../../store/tasksContext';
 import { calcWeek, getFirstThisMonth } from '../../utils/dateHelpers';
 import { getLastMonthResultsNumber } from '../../database';
 
+const theme = Appearance.getColorScheme()
 const ProdData = () => {
     const {allResults} = useTasks();
 
@@ -70,9 +71,9 @@ const styles = StyleSheet.create({
         alignItems:'center',
         padding:10,
         height:100,
-        backgroundColor:"white",
+        backgroundColor:colors.background,
         borderRadius:10,
-        elevation:5,
+        elevation:theme==="dark"?0:5,
         shadowOffset:{height:5,width:5},
         shadowColor:'#D4D4D4'
     },

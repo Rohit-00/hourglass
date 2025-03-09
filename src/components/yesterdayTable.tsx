@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Modal, Appearance } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { colors } from '../../utils/colors'
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -6,7 +6,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { convertToTimeDuration } from '../../utils/dateHelpers';
 import { getYesterdayTasks } from '../../database';
 
-
+const theme = Appearance.getColorScheme()
 const YesterdayTable = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Tasks>();
@@ -106,7 +106,7 @@ const YesterdayTable = () => {
                         <View style={styles.buttonContainer}>
          
                     <TouchableOpacity style={styles.closeModal} onPress={()=>setModalVisible(false)}>
-                        <Text>Close</Text>
+                        <Text style={{color:colors.text}}>Close</Text>
                     </TouchableOpacity>
                 </View>
                     </View>
@@ -128,9 +128,11 @@ const styles = StyleSheet.create({
        marginTop:15,
        backgroundColor:colors.background,
        borderRadius:10,
-       elevation:5,
+       elevation:theme==='dark'?0:5,
        shadowOffset:{height:5,width:5},
-       shadowColor:'#D4D4D4'
+       shadowColor:'#D4D4D4',
+       marginBottom:90
+
   
      },
      headingContainer:{
@@ -190,8 +192,6 @@ const styles = StyleSheet.create({
        borderRadius: 10,
        width: '80%',
        position: 'relative',
-       borderColor:colors.border,
-       borderWidth:0.5,
    },
    closeButton: {
        position: 'absolute',
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
    buttonContainer:{
        width:'100%',
        flexDirection:'row',
-       justifyContent:'space-between',
+       justifyContent:'flex-end',
 
    },
    deleteButton:{
@@ -244,5 +244,6 @@ const styles = StyleSheet.create({
        justifyContent:'center',
        borderWidth:1,
        borderColor:colors.border,
+       marginTop:5
    },
 })

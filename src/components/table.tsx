@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Modal, Appearance } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { colors } from '../../utils/colors'
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -6,6 +6,8 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTasks } from '../../store/tasksContext';
 import { convertToTimeDuration } from '../../utils/dateHelpers';
 import { truncateText } from '../../utils/helpers';
+
+const theme = Appearance.getColorScheme()
 
 interface ChildProps {
     bottomSheetModalRef: React.RefObject<BottomSheetModal>;
@@ -131,7 +133,7 @@ const {tasks, deleteSingleTask} = useTasks()
                         <Text style={{color:'white'}}>Delete</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.closeModal} onPress={()=>setModalVisible(false)}>
-                    <Text>Close</Text>
+                    <Text style={{color:colors.text}}>Close</Text>
                 </TouchableOpacity>
             </View>
                 </View>
@@ -153,9 +155,10 @@ const styles = StyleSheet.create({
         marginTop:15,
         backgroundColor:colors.background,
         borderRadius:10,
-        elevation:5,
+        elevation:theme==="dark"?0:5,
         shadowOffset:{height:5,width:5},
-        shadowColor:'#D4D4D4'
+        shadowColor:'#D4D4D4',
+        marginBottom:90
    
       },
       button:{
@@ -227,8 +230,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         width: '80%',
         position: 'relative',
-        borderColor:colors.border,
-        borderWidth:0.5,
+
     },
     closeButton: {
         position: 'absolute',
