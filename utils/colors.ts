@@ -2,15 +2,15 @@ import { Appearance } from "react-native";
 
 const theme = {
     dark: {
-        text: '#EFEFEF',
-        background: '#252525',
+        text: '#CCCCCC',
+        background: '#282828',
         primary: '#526BBB',
         border: '#D3D3D3',
         solid:'white',
         positive:'#00C896',
         negative:'#E05E5E',
         neutral:'#808080',
-        appBackground:'#1A1A1A'
+        appBackground:'#121212'
 
     },
     light: {
