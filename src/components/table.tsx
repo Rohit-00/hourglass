@@ -6,6 +6,8 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTasks } from '../../store/tasksContext';
 import { convertToTimeDuration } from '../../utils/dateHelpers';
 import { truncateText } from '../../utils/helpers';
+import { useTime } from '../../store/timeContext';
+import { useToast } from './toast';
 
 const theme = Appearance.getColorScheme()
 
@@ -24,12 +26,20 @@ const Table = ({heading,bottomSheetModalRef,sendFunctionsToParent,setBottomSheet
 const [modalVisible, setModalVisible] = useState(false);
 const [selectedItem, setSelectedItem] = useState<Tasks>();
 const {tasks, deleteSingleTask} = useTasks()
-
-  // Define functions inside child
+const {bedtime} = useTime()
+const {showToast} = useToast()
+console.log("bedtime",bedtime)
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-    setBottomSheetStatus(true)    
-  }, []);
+    if(bedtime!==null){
+        bottomSheetModalRef.current?.present();
+        setBottomSheetStatus(true) 
+    
+    }else {
+        showToast('warning','Please set wakeup time and bedtime first',5000)
+  
+    }
+ 
+  }, [bedtime]);
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);

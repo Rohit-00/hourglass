@@ -11,7 +11,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import History from "./src/screens/history";
 import { colors } from "./utils/colors";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-
+import { ToastProvider } from "./src/components/toast";
 const Tab = createBottomTabNavigator();
 const theme = Appearance.getColorScheme()
 export default function App() {
@@ -27,6 +27,7 @@ export default function App() {
 
   return (
     <TimeProvider> 
+      <ToastProvider>
     <TasksProvider>
     <GestureHandlerRootView>
     <NavigationContainer>
@@ -65,6 +66,7 @@ tabBarStyle: {
     </NavigationContainer>
      </GestureHandlerRootView>
     </TasksProvider>
+    </ToastProvider>
     </TimeProvider>
   );
 }
