@@ -9,6 +9,7 @@ import * as Yup from 'yup';
 import { convertTimeDifferenceToNumber, formattedToday, timeDifference } from "../../utils/dateHelpers";
 import { useTasks } from "../../store/tasksContext";
 import { useTime } from "../../store/timeContext";
+import { useToast } from "./toast";
 
 interface ChildProps {
   bottomSheetModalRef: React.RefObject<BottomSheetModal>;
@@ -54,13 +55,13 @@ interface FormValues {
 export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSheetStatus }) => {
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
-  
+  const {showToast} = useToast();
   const { createTask } = useTasks();
   const { fetchTimes, bedtime, wakeupTime } = useTime();
 
   const handleClose = useCallback(async () => {
     bottomSheetModalRef.current?.close();
-    setBottomSheetStatus(false)
+    setBottomSheetStatus(false);
   }, []);
 
   const calculatePercentage = (startTime: string, endTime: string): number => {
@@ -78,7 +79,7 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
 
   const handleSubmit = async (values: FormValues) => {
     const difference = convertTimeDifferenceToNumber(timeDifference(values.startTime, values.endTime));
-    
+    try{
     await createTask(
       formattedToday,
       values.task,
@@ -88,6 +89,11 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
       values.startTime,
       values.endTime
     );
+    showToast('success','Successfully Added Task')
+  
+    }catch(error){
+    showToast('error','Some Error Occured')
+    }
 
 
     handleClose();
@@ -168,7 +174,7 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
               value={values.startTime ? new Date(values.startTime) : new Date()}
               mode="time"
               is24Hour={false}
-              display="spinner"
+              display="default"
               onChange={(event, selectedDate) => {
                 setShowStartTimePicker(false);
                 if (selectedDate) {
@@ -192,7 +198,7 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
               value={values.endTime ? new Date(values.endTime) : new Date()}
               mode="time"
               is24Hour={false}
-              display="spinner"
+              display="default"
               onChange={(event, selectedDate) => {
                 setShowEndTimePicker(false);
                 if (selectedDate) {

@@ -28,7 +28,7 @@ const [selectedItem, setSelectedItem] = useState<Tasks>();
 const {tasks, deleteSingleTask} = useTasks()
 const {bedtime} = useTime()
 const {showToast} = useToast()
-console.log("bedtime",bedtime)
+
   const handlePresentModalPress = useCallback(() => {
     if(bedtime!==null){
         bottomSheetModalRef.current?.present();
