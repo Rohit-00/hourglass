@@ -77,6 +77,7 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
 
   const handleSubmit = async (values: FormValues) => {
     const difference = convertTimeDifferenceToNumber(timeDifference(values.startTime, values.endTime));
+    handleClose();
     try{
     await createTask(
       formattedToday,
@@ -94,7 +95,6 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
     }
 
 
-    handleClose();
   };
 
   const initialValues: FormValues = {
