@@ -17,25 +17,24 @@ interface ChildProps {
     handlePresentModalPress: () => void;
     handleSheetChanges: (index: number) => void;
   }) => void;
+  setBottomSheetStatus:(isOpen:Boolean) => void;
 }
 
-export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunctionsToParent}) => { 
+export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunctionsToParent,setBottomSheetStatus}) => { 
   const {fetchTimes, bedtime, wakeupTime} = useTime();
   const animatedValue = useRef(new Animated.Value(0)).current;
   const [tutorialDismissed, setTutorialDismissed] = useState(false);
 
-  // Define functions inside child
   const handlePresentModalPress = useCallback(() => {
     setTutorialDismissed(true);
     bottomSheetModalRef.current?.present();
-    bottomSheetModalRef.current?.close();
+    setBottomSheetStatus(true);
   }, []);
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
 
-  // Animation for the tutorial pointer
   useEffect(() => {
     if (bedtime === null && !tutorialDismissed) {
       Animated.loop(
@@ -57,13 +56,11 @@ export const TimeRem: React.FC<ChildProps> = ({bottomSheetModalRef, sendFunction
     }
   }, [bedtime, tutorialDismissed]);
 
-  // Transform for the pointer animation
   const pointerTranslateX = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: [-10, 10]
   });
 
-  // Send functions to parent when the component mounts
   useEffect(() => {
     sendFunctionsToParent({ handlePresentModalPress, handleSheetChanges });
     fetchTimes();

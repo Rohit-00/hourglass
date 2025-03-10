@@ -16,9 +16,10 @@ interface ChildProps {
       handleSheetChanges: (index: number) => void;
     }) => void;
     heading:string;
+    setBottomSheetStatus:(isOpen:Boolean)=>void;
   }
   
-const Table = ({heading,bottomSheetModalRef,sendFunctionsToParent}:ChildProps) => {
+const Table = ({heading,bottomSheetModalRef,sendFunctionsToParent,setBottomSheetStatus}:ChildProps) => {
     
 const [modalVisible, setModalVisible] = useState(false);
 const [selectedItem, setSelectedItem] = useState<Tasks>();
@@ -27,8 +28,7 @@ const {tasks, deleteSingleTask} = useTasks()
   // Define functions inside child
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
-    bottomSheetModalRef.current?.close();
-    
+    setBottomSheetStatus(true)    
   }, []);
 
   const handleSheetChanges = useCallback((index: number) => {

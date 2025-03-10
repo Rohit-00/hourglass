@@ -9,10 +9,10 @@ import * as Yup from 'yup';
 import { convertTimeDifferenceToNumber, formattedToday, timeDifference } from "../../utils/dateHelpers";
 import { useTasks } from "../../store/tasksContext";
 import { useTime } from "../../store/timeContext";
-import { getResults, getTasks, getYesterdayTasks } from "../../database";
 
 interface ChildProps {
   bottomSheetModalRef: React.RefObject<BottomSheetModal>;
+  setBottomSheetStatus:(isOpen:Boolean)=>void;
 }
 
 const TaskValidationSchema = Yup.object().shape({
@@ -51,7 +51,7 @@ interface FormValues {
   percentage: number;
 }
 
-export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
+export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSheetStatus }) => {
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
   
@@ -60,6 +60,7 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef }) => {
 
   const handleClose = useCallback(async () => {
     bottomSheetModalRef.current?.close();
+    setBottomSheetStatus(false)
   }, []);
 
   const calculatePercentage = (startTime: string, endTime: string): number => {

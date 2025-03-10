@@ -9,10 +9,11 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface ChildProps {
     bottomSheetModalRef: React.RefObject<BottomSheetModal>;
+    setBottomSheetOpen:(isOpen:Boolean)=>void;
   }
 
 
-export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
+export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef,setBottomSheetOpen}) => {
 
     const [showBedtimePicker, setShowBedtimePicker] = useState(false);
     const [showWakeupPicker, setShowWakeupPicker] = useState(false);
@@ -23,6 +24,7 @@ export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef}) => {
 
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.close();
+        setBottomSheetOpen(false)
       }, []);
 
     const handleSaveTimes = async () => {
