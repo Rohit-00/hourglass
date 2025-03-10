@@ -39,9 +39,7 @@ const TaskValidationSchema = Yup.object().shape({
         }
       }
     ),
-  moodValue: Yup.string()
-    .required('Work type is required')
-    .oneOf(['Productive', 'neutral', 'Unproductive'], 'Invalid work type')
+  // moodValue was removed from validation
 });
 
 interface FormValues {
@@ -217,10 +215,7 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
 
           <View style={styles.pickerWrapper}>
             <Text style={styles.label}>Work Type</Text>
-            <View style={[
-              styles.pickerContainer,
-              touched.moodValue && errors.moodValue ? styles.inputError : null
-            ]}>
+            <View style={styles.pickerContainer}>
               <Picker
                 mode="dropdown"
                 selectedValue={values.moodValue}
@@ -234,9 +229,6 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
                 <Picker.Item label="Unproductive" value="Unproductive" style={{ color: colors.text ,backgroundColor:colors.background}} />
               </Picker>
             </View>
-            {touched.moodValue && errors.moodValue && (
-              <Text style={styles.errorText}>{errors.moodValue}</Text>
-            )}
           </View>
 
           <View style={styles.percentageContainer}>
@@ -248,9 +240,9 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
               <Text  style={{color:colors.text}}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity 
-              style={[styles.updateButton, !isValid && styles.disabledButton]} 
+              style={[styles.updateButton]} 
               onPress={() => handleSubmit()}
-              disabled={!isValid}
+
             >
               <Text style={{ color: 'white' }}>Add</Text>
             </TouchableOpacity>
@@ -307,7 +299,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   disabledButton: {
-    backgroundColor: colors.primary + '80', // Add opacity to indicate disabled state
+    backgroundColor: colors.primary + '80', 
   },
   inputContainer: {
     width: '100%',
