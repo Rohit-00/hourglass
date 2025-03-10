@@ -75,7 +75,7 @@ export function getPercentage(wakeupTime:string,bedtime:string){
 
 
 export function convertToTimeDuration(hours: number): string {
-    if (hours < 0) throw new Error("Time cannot be negative");
+    // if (hours < 0) throw new Error("Time cannot be negative");
   
     const wholeHours = Math.floor(hours);
     const minutes = Math.round((hours - wholeHours) * 60);
