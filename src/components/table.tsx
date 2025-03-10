@@ -5,7 +5,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useTasks } from '../../store/tasksContext';
 import { convertToTimeDuration } from '../../utils/dateHelpers';
-import { truncateText } from '../../utils/helpers';
+import { normalizeFontSize, truncateText } from '../../utils/helpers';
 import { useTime } from '../../store/timeContext';
 import { useToast } from './toast';
 
@@ -55,7 +55,7 @@ const {showToast} = useToast()
         <View style={styles.headingContainer}>
             <Text style={styles.heading}>{heading}</Text>
             <TouchableOpacity onPress={handlePresentModalPress} style={styles.button}>
-                <AntDesign name="plus" size={24} color={colors.primary} />
+                <AntDesign name="plus" size={normalizeFontSize(26)} color={colors.primary} />
                 <Text style={styles.buttonText}>Add Task</Text>
             </TouchableOpacity>
         </View>
@@ -104,7 +104,7 @@ const {showToast} = useToast()
                 style={styles.closeButton}
                 onPress={() => setModalVisible(false)}
             >
-                <AntDesign name="close" size={24} color={colors.text} />
+                <AntDesign name="close" size={normalizeFontSize(26)} color={colors.text} />
             </TouchableOpacity>
             {selectedItem && (
                 <View>
@@ -181,7 +181,8 @@ const styles = StyleSheet.create({
         borderRadius:10
       },
       buttonText:{
-        color:colors.primary
+        color:colors.primary,
+        fontSize:normalizeFontSize(16)
       },
       headingContainer:{
             flexDirection:'row',
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
             alignItems:'center'
       },
       heading:{
-            fontSize:18,
+            fontSize:normalizeFontSize(20),
             color:colors.text,
             marginBottom:10
       },

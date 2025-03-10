@@ -5,6 +5,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 
 import { convertToTimeDuration } from '../../utils/dateHelpers';
 import { getYesterdayTasks } from '../../database';
+import { normalizeFontSize } from '../../utils/helpers';
 
 const theme = Appearance.getColorScheme()
 const YesterdayTable = () => {
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
            alignItems:'center'
      },
      heading:{
-           fontSize:18,
+           fontSize:normalizeFontSize(20),
            color:colors.text,
            marginBottom:10
      },

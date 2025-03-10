@@ -2,6 +2,7 @@ import { Appearance, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { colors } from '../../utils/colors'
 import { useTasks } from '../../store/tasksContext'
+import { normalizeFontSize } from '../../utils/helpers'
 
 const theme = Appearance.getColorScheme()
 
@@ -39,11 +40,11 @@ const styles = StyleSheet.create({
                
     },
     text:{
-        fontSize:14,
+        fontSize:normalizeFontSize(16),
         color:colors.text
     },
     result:{
-        fontSize:22,
+        fontSize:normalizeFontSize(24),
         fontWeight:'bold',
         color:colors.positive
     }

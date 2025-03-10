@@ -4,6 +4,7 @@ import { colors } from '../../utils/colors';
 import { convertToTimeDuration, formattedYesterday } from '../../utils/dateHelpers';
 import { useTasks } from '../../store/tasksContext';
 import { getTotalNeutralHours, getTotalProductiveHours, getTotalUnproductiveHours, getYesterdayMissingHours } from '../../database';
+import { normalizeFontSize } from '../../utils/helpers';
 
 const theme = Appearance.getColorScheme()
 
@@ -69,18 +70,16 @@ const MetricsCard:React.FC<MetricCardProps> = ({title,day}) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 340,
-    marginBottom: 15,
+
     width: '100%',
   },
   statsCard: {
     padding: 15,
-    height:'100%',
-    width: '100%',
+
     marginTop: 15,
     backgroundColor: colors.background,
     borderRadius: 10,
-    position: 'absolute',
+
     backfaceVisibility: 'hidden',
     elevation:theme==="dark"?0:5,
     shadowOffset:{height:5,width:5},
@@ -88,7 +87,7 @@ const styles = StyleSheet.create({
     
   },
   headerText: {
-    fontSize: 24,
+    fontSize: normalizeFontSize(26),
     fontWeight: 'bold',
     marginBottom: 5,
     color:colors.text
@@ -104,11 +103,11 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   label: {
-    fontSize: 16,
+    fontSize: normalizeFontSize(18),
     color:colors.text
   },
   value: {
-    fontSize: 26,
+    fontSize: normalizeFontSize(28),
     fontWeight: 'bold',
   },
 });

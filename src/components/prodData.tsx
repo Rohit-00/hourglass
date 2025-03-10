@@ -4,6 +4,7 @@ import { colors } from '../../utils/colors'
 import { useTasks } from '../../store/tasksContext';
 import { calcWeek, getFirstThisMonth } from '../../utils/dateHelpers';
 import { getLastMonthResultsNumber } from '../../database';
+import { normalizeFontSize } from '../../utils/helpers';
 
 const theme = Appearance.getColorScheme()
 const ProdData = () => {
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
         shadowColor:'#D4D4D4'
     },
     heading:{
-        fontSize:20,
+        fontSize:normalizeFontSize(22),
         fontWeight:'bold',
         marginTop:20,
         marginBottom:5,
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     data:{
-        fontSize:32,
+        fontSize:normalizeFontSize(34),
         fontWeight:'bold',
         color:colors.text
     },
