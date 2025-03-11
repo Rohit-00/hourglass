@@ -9,14 +9,16 @@ import { AddTask } from "../../src/components/addTask";
 import BentoGrid from "../components/bentoGrid";
 import { useEffect, useRef, useState } from "react";
 import { colors } from "../../utils/colors";
+import { EditTask } from "../components/editTask";
 const Home = () => {
 
       const bottomSheetModalRef = useRef<BottomSheetModal>(null);
       const taskBottomSheetModalRef = useRef<BottomSheetModal>(null);
+      const editTaskSheetModalRef = useRef<BottomSheetModal>(null);
 
       const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<Boolean>(false);
 
-      //This ugly chunk of code is being used to make the bottom sheet close with back button
+      //This ugly chunk of code is being used to make the bottom sheet close with back button (most useful feature demanded by my friend)
       useEffect(() => {
         const handleBackButtonPress = () => {
           if (isBottomSheetOpen) {
@@ -54,7 +56,12 @@ const Home = () => {
         
             <TimeRem bottomSheetModalRef={bottomSheetModalRef} sendFunctionsToParent={handleReceiveChildFunctions} setBottomSheetStatus={setBottomSheetStatus}/>
             <BentoGrid/>
-            <Table heading="What Have I Done Today" bottomSheetModalRef={taskBottomSheetModalRef} sendFunctionsToParent={handleReceiveChildFunctions} setBottomSheetStatus={setBottomSheetStatus}/>
+            <Table heading="What Have I Done Today" 
+                bottomSheetModalRef={taskBottomSheetModalRef} 
+                sendFunctionsToParent={handleReceiveChildFunctions} 
+                setBottomSheetStatus={setBottomSheetStatus}
+                editTaskBottomSheetRef={editTaskSheetModalRef}
+                />
            
         </ScrollView>
    
@@ -74,6 +81,15 @@ const Home = () => {
         <BottomSheetModal ref={taskBottomSheetModalRef} aria-hidden backgroundStyle={{backgroundColor:colors.background}}>
           <BottomSheetView style={styles.contentContainer}>
            <AddTask bottomSheetModalRef={taskBottomSheetModalRef} setBottomSheetStatus={setBottomSheetStatus} />
+          </BottomSheetView>
+        </BottomSheetModal>
+      </BottomSheetModalProvider>
+
+      {/* Bottom Sheet for editing tasks */}
+      <BottomSheetModalProvider>
+        <BottomSheetModal ref={editTaskSheetModalRef} aria-hidden backgroundStyle={{backgroundColor:colors.background}}>
+          <BottomSheetView style={styles.contentContainer}>
+           <EditTask bottomSheetModalRef={editTaskSheetModalRef} setBottomSheetStatus={setBottomSheetStatus} />
           </BottomSheetView>
         </BottomSheetModal>
       </BottomSheetModalProvider>

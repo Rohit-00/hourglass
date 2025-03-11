@@ -10,6 +10,7 @@ import { convertTimeDifferenceToNumber, formattedToday, timeDifference } from ".
 import { useTasks } from "../../store/tasksContext";
 import { useTime } from "../../store/timeContext";
 import { useToast } from "./toast";
+import { useEditTask } from "../../store/editTaskContext";
 
 interface ChildProps {
   bottomSheetModalRef: React.RefObject<BottomSheetModal>;
@@ -49,13 +50,14 @@ interface FormValues {
   percentage: number;
 }
 
-export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSheetStatus }) => {
+export const EditTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSheetStatus }) => {
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
   const {showToast} = useToast();
-  const { createTask } = useTasks();
+  const { updateTask } = useTasks();
   const { fetchTimes, bedtime, wakeupTime } = useTime();
-
+  const {task} = useEditTask();
+  
   const handleClose = useCallback(async () => {
     bottomSheetModalRef.current?.close();
     setBottomSheetStatus(false);
@@ -78,7 +80,8 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
     const difference = convertTimeDifferenceToNumber(timeDifference(values.startTime, values.endTime));
     handleClose();
     try{
-    await createTask(
+    await updateTask(
+      task.id,
       formattedToday,
       values.task,
       difference.toString(),
@@ -97,11 +100,11 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
   };
 
   const initialValues: FormValues = {
-    task: '',
-    startTime: '',
-    endTime: '',
-    moodValue: 'neutral',
-    percentage: 0
+    task: task.title,
+    startTime: task.start_time,
+    endTime: task.end_time,
+    moodValue: task.tag,
+    percentage: task.percentage
   };
 
   return (
@@ -112,12 +115,13 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
     >
       {({ handleChange, handleSubmit, setFieldValue, values, errors, touched, isValid }) => (
         <View style={styles.container}>
-          <Text style={styles.heading}>Add Task</Text>
+          <Text style={styles.heading}>Edit Task</Text>
           
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
               placeholder="Task"
+              defaultValue="hh"
               value={values.task}
               placeholderTextColor={colors.text}
               onChangeText={handleChange('task')}
@@ -243,7 +247,7 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
               onPress={() => handleSubmit()}
 
             >
-              <Text style={{ color: 'white' }}>Add</Text>
+              <Text style={{ color: 'white' }}>Update</Text>
             </TouchableOpacity>
           </View>
         </View>

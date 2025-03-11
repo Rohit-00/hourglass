@@ -8,6 +8,7 @@ import { convertToTimeDuration } from '../../utils/dateHelpers';
 import { normalizeFontSize, truncateText } from '../../utils/helpers';
 import { useTime } from '../../store/timeContext';
 import { useToast } from './toast';
+import { useEditTask } from '../../store/editTaskContext';
 
 const theme = Appearance.getColorScheme()
 
@@ -19,15 +20,24 @@ interface ChildProps {
     }) => void;
     heading:string;
     setBottomSheetStatus:(isOpen:Boolean)=>void;
+    editTaskBottomSheetRef: React.RefObject<BottomSheetModal>;
   }
   
-const Table = ({heading,bottomSheetModalRef,sendFunctionsToParent,setBottomSheetStatus}:ChildProps) => {
+const Table = ({heading,bottomSheetModalRef,sendFunctionsToParent,setBottomSheetStatus,editTaskBottomSheetRef}:ChildProps) => {
     
 const [modalVisible, setModalVisible] = useState(false);
 const [selectedItem, setSelectedItem] = useState<Tasks>();
 const {tasks, deleteSingleTask} = useTasks()
 const {bedtime} = useTime()
 const {showToast} = useToast()
+const {addTask,task} = useEditTask()
+
+  const handleEdit =  useCallback(() => {
+    editTaskBottomSheetRef.current?.present();
+    addTask(selectedItem?.id!,selectedItem?.date!,selectedItem?.percentage!,selectedItem?.title!,selectedItem?.duration!,selectedItem?.tag!,selectedItem?.start_time!,selectedItem?.end_time!)
+    console.log(selectedItem?.date)
+    setModalVisible(false)
+  },[])
 
   const handlePresentModalPress = useCallback(() => {
     if(bedtime!==null){
@@ -36,7 +46,6 @@ const {showToast} = useToast()
     
     }else {
         showToast('warning','Please set wakeup time and bedtime first',5000)
-  
     }
  
   }, [bedtime]);
@@ -45,7 +54,6 @@ const {showToast} = useToast()
     console.log("handleSheetChanges", index);
   }, []);
 
-  // Send functions to parent when the component mounts
   useEffect(() => {
     sendFunctionsToParent({ handlePresentModalPress, handleSheetChanges });
   }, [sendFunctionsToParent, handlePresentModalPress, handleSheetChanges,bottomSheetModalRef.current]);
@@ -142,8 +150,9 @@ const {showToast} = useToast()
                 <TouchableOpacity style={styles.deleteButton} onPress={() => {deleteSingleTask(selectedItem.id); setModalVisible(false)}}>    
                         <Text style={{color:'white'}}>Delete</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.closeModal} onPress={()=>setModalVisible(false)}>
-                    <Text style={{color:colors.text}}>Close</Text>
+                <TouchableOpacity style={styles.closeModal} onPress={()=>{handleEdit();addTask(selectedItem?.id,selectedItem?.date,selectedItem?.percentage,selectedItem?.title,selectedItem?.duration,selectedItem?.tag,selectedItem?.start_time,selectedItem?.end_time)
+    console.log(task);}}>
+                    <Text style={{color:colors.text}}>Edit</Text>
                 </TouchableOpacity>
             </View>
                 </View>

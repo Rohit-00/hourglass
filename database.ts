@@ -234,10 +234,14 @@ export const getLastMonthResultsNumber = async() => {
     console.log(e)
 }
 }
-export const updateTask = async (id:number,date:string,title:string,duration:string,percentage:number,tag:string,start_time:string,end_time:string) => {
+export const editTask = async (id:number,date:string,title:string,duration:string,percentage:number,tag:string,start_time:string,end_time:string) => {
+    try{
     const result = await db.runAsync(
         'UPDATE all_tasks SET date = ?, title = ?, duration = ?, percentage = ?, tag = ?, start_time = ?, end_time = ? where id = ?'
         , date, title, duration, percentage, tag, start_time, end_time,id);
     return result
+    }catch(e){
+        console.log(e)
+    }
     
 }
