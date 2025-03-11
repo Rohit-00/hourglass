@@ -1,7 +1,7 @@
 // context/TasksContext.tsx
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import {addResult, getTasks, addTask, getTotalProductiveHours, getTotalUnproductiveHours, getTotalMissingHours, getTotalNeutralHours, getYesterdayResult, deleteTask, getResults, addMonthResults } from '../database';
+import {addResult, getTasks, addTask, getTotalProductiveHours, getTotalUnproductiveHours, getTotalMissingHours, getTotalNeutralHours, getYesterdayResult, deleteTask, getResults, addMonthResults, editTask } from '../database';
 import { formattedToday } from '../utils/dateHelpers';
 
 
@@ -19,6 +19,7 @@ interface TasksContextType {
     yesterdayResult:string;
     deleteSingleTask:(id:number)=>Promise<void>;
     allResults:Result[];
+    updateTask:(id:number,date:string,title:string,duration:string,percentage:number,tag:string,start_time:string,end_time:string)=>Promise<void>;
     // setResults:()=>Promise<void>;
 }
 
@@ -33,6 +34,7 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const [result, setResult] = useState<string>('');
     const [yesterdayResult, setYesterdayResult] = useState<string>('');
     const [allResults, setAllResults] = useState<Result[]>([])
+
 
     const fetchTasks = async () => {
         const allTasks = await getTasks();
@@ -93,6 +95,12 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         await addMonthResults(CURRENT_MONTH,CURRENT_YEAR)
         getAllResults();
     }
+
+    const updateTask = async(id:number,date:string,title:string,duration:string,percentage:number,tag:string,start_time:string,end_time:string) => {
+        await editTask(id,date,title,duration,percentage,tag,start_time,end_time)
+        fetchTasks(); 
+    }
+    
     useEffect(() => {
         fetchTasks(); 
         fetchProductive();
@@ -100,13 +108,11 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         fetchYesterdayResult();
         getAllResults();
         setResults();
-        
-        
     }, []);
 
 
     return (
-        <TasksContext.Provider value={{ tasks, fetchTasks, createTask,productive,unproductive,neutral,missing,fetchResult,result,fetchYesterdayResult,yesterdayResult,deleteSingleTask,allResults }}>
+        <TasksContext.Provider value={{ tasks, fetchTasks, createTask,productive,unproductive,neutral,missing,fetchResult,result,fetchYesterdayResult,yesterdayResult,deleteSingleTask,allResults,updateTask }}>
             {children}
         </TasksContext.Provider>
     );
