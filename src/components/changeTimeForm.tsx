@@ -50,7 +50,7 @@ export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef,setBott
                     value={new Date(wakeupTimeInput)}
                     mode="time"
                     is24Hour={false}
-                    display="spinner"
+                    display="default"
                     onChange={(event, selectedDate) => {
                         const currentDate = selectedDate || wakeupTimeInput;
                         setShowWakeupPicker(false);
@@ -76,7 +76,7 @@ export const ChangeTimeForm:React.FC<ChildProps> = ({bottomSheetModalRef,setBott
                     value={new Date(bedtimeInput)}
                     mode="time"
                     is24Hour={false}
-                    display="spinner"
+                    display="default"
                     onChange={(event, selectedDate) => {
                         const currentDate = selectedDate || bedtimeInput;
                         setShowBedtimePicker(false);
