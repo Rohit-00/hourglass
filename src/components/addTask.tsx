@@ -13,38 +13,33 @@ import { useToast } from "./toast";
 
 interface ChildProps {
   bottomSheetModalRef: React.RefObject<BottomSheetModal>;
-  setBottomSheetStatus:(isOpen:Boolean)=>void;
+  setBottomSheetStatus: (isOpen: boolean) => void;
 }
 
 const TaskValidationSchema = Yup.object().shape({
   task: Yup.string()
     .required('Task name is required')
     .min(2, 'Task name must be at least 2 characters'),
-  startTime: Yup.string()
+  startTime: Yup.date()
     .required('Start time is required'),
-  endTime: Yup.string()
+  endTime: Yup.date()
     .required('End time is required')
     .test(
       'is-greater',
       'End time must be after start time',
-      function(endTime) {
+      function (endTime) {
         const { startTime } = this.parent;
         if (!startTime || !endTime) return true;
-        
-        try {
-          const difference = convertTimeDifferenceToNumber(timeDifference(startTime, endTime));
-          return difference > 0;
-        } catch (e) {
-          return false;
-        }
+
+        return endTime > startTime;
       }
     ),
 });
 
 interface FormValues {
   task: string;
-  startTime: string;
-  endTime: string;
+  startTime: Date | null;
+  endTime: Date | null;
   moodValue: string;
   percentage: number;
 }
@@ -52,7 +47,8 @@ interface FormValues {
 export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSheetStatus }) => {
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
-  const {showToast} = useToast();
+
+  const { showToast } = useToast();
   const { createTask } = useTasks();
   const { fetchTimes, bedtime, wakeupTime } = useTime();
 
@@ -75,31 +71,30 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
   };
 
   const handleSubmit = async (values: FormValues) => {
-    const difference = convertTimeDifferenceToNumber(timeDifference(values.startTime, values.endTime));
+    if (!values.startTime || !values.endTime) return;
+
+    const difference = convertTimeDifferenceToNumber(timeDifference(values.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }), values.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })));
     handleClose();
-    try{
-    await createTask(
-      formattedToday,
-      values.task,
-      difference.toString(),
-      values.percentage,
-      values.moodValue,
-      values.startTime,
-      values.endTime
-    );
-    showToast('success','Successfully Added Task')
-  
-    }catch(error){
-    showToast('error','Some Error Occured')
+    try {
+      await createTask(
+        formattedToday,
+        values.task,
+        difference.toString(),
+        values.percentage,
+        values.moodValue,
+        values.startTime.toLocaleTimeString(),
+        values.endTime.toLocaleTimeString()
+      );
+      showToast('success', 'Successfully Added Task');
+    } catch (error) {
+      showToast('error', 'Some Error Occurred');
     }
-
-
   };
 
   const initialValues: FormValues = {
     task: '',
-    startTime: '',
-    endTime: '',
+    startTime: null,
+    endTime: null,
     moodValue: 'neutral',
     percentage: 0
   };
@@ -113,7 +108,7 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
       {({ handleChange, handleSubmit, setFieldValue, values, errors, touched, isValid }) => (
         <View style={styles.container}>
           <Text style={styles.heading}>Add Task</Text>
-          
+
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
@@ -128,61 +123,65 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
           )}
 
           <View style={styles.dateContainer}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[
-                styles.date, 
+                styles.date,
                 touched.startTime && errors.startTime ? styles.inputError : null
-              ]} 
+              ]}
               onPress={() => setShowStartTimePicker(true)}
             >
               <Text style={styles.placeholder}>
-                {values.startTime ? values.startTime : 'Start Time'}
+                {values.startTime ? values.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : 'Start Time'}
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[
-                styles.date, 
+                styles.date,
                 touched.endTime && errors.endTime ? styles.inputError : null
-              ]} 
+              ]}
               onPress={() => setShowEndTimePicker(true)}
             >
               <Text style={styles.placeholder}>
-                {values.endTime ? values.endTime : 'End Time'}
+                {values.endTime ? values.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : 'End Time'}
               </Text>
             </TouchableOpacity>
           </View>
-          
+
           <View style={styles.errorContainer}>
             <View style={{ width: '46%' }}>
               {touched.startTime && errors.startTime && (
-                <Text style={styles.errorText}>{errors.startTime}</Text>
+                <Text style={styles.errorText}>{errors.startTime as any}</Text>
               )}
             </View>
             <View style={{ width: '46%' }}>
               {touched.endTime && errors.endTime && (
-                <Text style={styles.errorText}>{errors.endTime}</Text>
+                <Text style={styles.errorText}>{errors.endTime as any}</Text>
               )}
             </View>
           </View>
 
           {showStartTimePicker && (
             <DateTimePicker
-              value={values.startTime ? new Date(values.startTime) : new Date()}
+              value={values.startTime || new Date()}
               mode="time"
               is24Hour={false}
               display="default"
               onChange={(event, selectedDate) => {
                 setShowStartTimePicker(false);
+                const formattedTime = selectedDate!.toLocaleTimeString([], { 
+                  hour: '2-digit', 
+                  minute: '2-digit', 
+                  hour12: true 
+                });
                 if (selectedDate) {
-                  const formattedTime = new Date(selectedDate.toString().replace(/^"+|"+$/g, ''))
-                    .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-                  
-                  setFieldValue('startTime', formattedTime);
-                  
-                  // Update percentage if both times are set
+                  setFieldValue('startTime', selectedDate);
                   if (values.endTime) {
-                    const newPercentage = calculatePercentage(formattedTime, values.endTime);
+                    const newPercentage = calculatePercentage(formattedTime, values.endTime.toLocaleTimeString([], { 
+                      hour: '2-digit', 
+                      minute: '2-digit', 
+                      hour12: true 
+                    }));
                     setFieldValue('percentage', newPercentage);
                   }
                 }
@@ -192,21 +191,28 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
 
           {showEndTimePicker && (
             <DateTimePicker
-              value={values.endTime ? new Date(values.endTime) : new Date()}
+              value={values.endTime || new Date()}
               mode="time"
               is24Hour={false}
               display="default"
               onChange={(event, selectedDate) => {
                 setShowEndTimePicker(false);
+                const formattedTime = selectedDate!.toLocaleTimeString([], { 
+                  hour: '2-digit', 
+                  minute: '2-digit', 
+                  hour12: true 
+                });
                 if (selectedDate) {
-                  const formattedTime = new Date(selectedDate.toString().replace(/^"+|"+$/g, ''))
-                    .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-                  
-                  setFieldValue('endTime', formattedTime);
+                  setFieldValue('endTime', selectedDate);
                   fetchTimes();
-
-                  const newPercentage = calculatePercentage(values.startTime, formattedTime);
-                  setFieldValue('percentage', newPercentage);
+                  if (values.startTime) {
+                    const newPercentage = calculatePercentage(values.startTime!.toLocaleTimeString([], { 
+                      hour: '2-digit', 
+                      minute: '2-digit', 
+                      hour12: true 
+                    }), formattedTime);
+                    setFieldValue('percentage', newPercentage);
+                  }
                 }
               }}
             />
@@ -223,25 +229,24 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
                 numberOfLines={1}
                 dropdownIconColor={colors.text}
               >
-                <Picker.Item label="Productive" value="Productive" style={{ color: colors.text,backgroundColor:colors.background }} />
-                <Picker.Item label="Neutral" value="neutral" style={{ color: colors.text ,backgroundColor:colors.background }} />
-                <Picker.Item label="Unproductive" value="Unproductive" style={{ color: colors.text ,backgroundColor:colors.background}} />
+                <Picker.Item label="Productive" value="Productive" style={{ color: colors.text, backgroundColor: colors.background }} />
+                <Picker.Item label="Neutral" value="neutral" style={{ color: colors.text, backgroundColor: colors.background }} />
+                <Picker.Item label="Unproductive" value="Unproductive" style={{ color: colors.text, backgroundColor: colors.background }} />
               </Picker>
             </View>
           </View>
 
           <View style={styles.percentageContainer}>
-            <Text  style={{color:colors.text}}>{values.percentage}% </Text>
-            <Text style={{color:colors.text}}>of your working hours</Text>
+            <Text style={{ color: colors.text }}>{values.percentage}% </Text>
+            <Text style={{ color: colors.text }}>of your working hours</Text>
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.cancelButton} onPress={handleClose}>
-              <Text  style={{color:colors.text}}>Cancel</Text>
+              <Text style={{ color: colors.text }}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.updateButton]} 
+            <TouchableOpacity
+              style={[styles.updateButton]}
               onPress={() => handleSubmit()}
-
             >
               <Text style={{ color: 'white' }}>Add</Text>
             </TouchableOpacity>
@@ -258,7 +263,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     paddingHorizontal: 30,
-    paddingBottom:90
+    paddingBottom: 90
   },
   heading: {
     fontSize: 16,
@@ -269,7 +274,7 @@ const styles = StyleSheet.create({
   input: {
     width: '90%',
     height: '100%',
-    color:colors.text
+    color: colors.text
   },
   placeholder: {
     color: colors.text
@@ -298,7 +303,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   disabledButton: {
-    backgroundColor: colors.primary + '80', 
+    backgroundColor: colors.primary + '80',
   },
   inputContainer: {
     width: '100%',
@@ -341,7 +346,6 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     width: '100%',
-
   },
   label: {
     marginLeft: 5,
