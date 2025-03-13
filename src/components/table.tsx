@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View, Modal, Appearance } from 'react-native'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { colors } from '../../utils/colors'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
@@ -9,6 +9,8 @@ import { normalizeFontSize, truncateText } from '../../utils/helpers';
 import { useTime } from '../../store/timeContext';
 import { useToast } from './toast';
 import { useEditTask } from '../../store/editTaskContext';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { Picker } from '@react-native-picker/picker';
 
 const theme = Appearance.getColorScheme()
 
@@ -22,11 +24,18 @@ interface ChildProps {
     setBottomSheetStatus:(isOpen:Boolean)=>void;
     editTaskBottomSheetRef: React.RefObject<BottomSheetModal>;
   }
+enum sortOrders {
+    hoursAscending = "hoursAscending",
+    hoursDescending = "hoursDescending",
+    default = "default"
+
+}
   
 const Table = ({heading,bottomSheetModalRef,sendFunctionsToParent,setBottomSheetStatus,editTaskBottomSheetRef}:ChildProps) => {
     
 const [modalVisible, setModalVisible] = useState(false);
 const [selectedItem, setSelectedItem] = useState<Tasks>();
+const [sortOrder, setSortOrder] = useState<sortOrders>(sortOrders.default)
 const {tasks, deleteSingleTask} = useTasks()
 const {bedtime} = useTime()
 const {showToast} = useToast()
@@ -58,17 +67,51 @@ const {addTask,task} = useEditTask()
     sendFunctionsToParent({ handlePresentModalPress, handleSheetChanges });
   }, [sendFunctionsToParent, handlePresentModalPress, handleSheetChanges,bottomSheetModalRef.current]);
 
+  const sortedDescHours = tasks.sort((a,b)=>{
+    switch(sortOrder){
+        case sortOrders.hoursAscending:
+            return b.duration-a.duration 
+        case sortOrders.hoursDescending:
+            return a.duration-b.duration
+        default:
+            return b.id - a.id
+    }
+    
+  }
+
+);
+const pickerRef : any = useRef();
+
   return (
     <View style={styles.container}>
         <View style={styles.headingContainer}>
+            <View style={{flexDirection:'row',gap:5}}>
             <Text style={styles.heading}>{heading}</Text>
+            <TouchableOpacity onPress={()=>pickerRef.current?.focus()}>
+            <MaterialIcons name="sort" size={normalizeFontSize(26)} color={colors.primary} />
+            </TouchableOpacity>
+              <Picker
+                            ref={pickerRef}
+                            mode="dropdown"
+                            selectedValue={sortOrder}
+                            onValueChange={(itemValue) => setSortOrder(itemValue)}
+                            style={{opacity:0,height:0,width:0}}
+                            numberOfLines={1}
+                            dropdownIconColor={colors.text}  
+                          >
+                            <Picker.Item label="Ascending Duration" value={sortOrders.hoursAscending} style={{ color: colors.text,backgroundColor:colors.background }} />
+                            <Picker.Item label="Descending Duration" value={sortOrders.hoursDescending} style={{ color: colors.text ,backgroundColor:colors.background }} />
+                            <Picker.Item label="Most Recent" value={sortOrders.default} style={{ color: colors.text ,backgroundColor:colors.background}} />
+                          </Picker>
+            </View>
             <TouchableOpacity onPress={handlePresentModalPress} style={styles.button}>
                 <AntDesign name="plus" size={normalizeFontSize(26)} color={colors.primary} />
                 <Text style={styles.buttonText}>Add Task</Text>
             </TouchableOpacity>
         </View>
         <View>
-        {tasks && tasks.map((item, index) => (
+        {
+        tasks && sortedDescHours.map((item, index) => (
     <TouchableOpacity 
         key={index} 
         onPress={() => {

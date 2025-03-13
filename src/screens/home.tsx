@@ -56,7 +56,7 @@ const Home = () => {
         
             <TimeRem bottomSheetModalRef={bottomSheetModalRef} sendFunctionsToParent={handleReceiveChildFunctions} setBottomSheetStatus={setBottomSheetStatus}/>
             <BentoGrid/>
-            <Table heading="What Have I Done Today" 
+            <Table heading="Tasks Done" 
                 bottomSheetModalRef={taskBottomSheetModalRef} 
                 sendFunctionsToParent={handleReceiveChildFunctions} 
                 setBottomSheetStatus={setBottomSheetStatus}
