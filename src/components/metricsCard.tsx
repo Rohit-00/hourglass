@@ -43,22 +43,22 @@ const MetricsCard:React.FC<MetricCardProps> = ({title,day}) => {
               <Text style={styles.label}>Productive</Text>
               <Text style={[styles.value, { color: '#00C896' }]}>{convertToTimeDuration(day==="today"?productive:yesterdayProd!)}</Text>
             </View>
-            <View style={{height:1,width:'80%',backgroundColor:colors.text}}/>
+        <View style={styles.divider} />
             <View style={styles.tableRow}>
               <Text style={styles.label}>Unproductive</Text>
               <Text style={[styles.value, { color: '#E05E5E' }]}>{convertToTimeDuration(day==="today"?unproductive:yesterdayUnprod!)}</Text>
             </View>
-            <View style={{height:1,width:'80%',backgroundColor:colors.text}}/>
+        <View style={styles.divider} />
             <View style={styles.tableRow}>
               <Text style={styles.label}>Neutral</Text>
               <Text style={[styles.value, { color: '#808080' }]}>{convertToTimeDuration(day==="today"?neutral:yesterdayNeutral!)}</Text>
             </View>
-            <View style={{height:1,width:'80%',backgroundColor:colors.text}}/>
+        <View style={styles.divider} />
             <View style={styles.tableRow}>
               <Text style={styles.label}>Missing</Text>
               <Text style={[styles.value, { color: '#FFB800' }]}>{convertToTimeDuration(day==="today"?missing:yesterdayMissing!)}</Text>
             </View>
-            <View style={{height:1,width:'80%',backgroundColor:colors.text}}/>
+        <View style={styles.divider} />
           </View>
 
           </View>
@@ -110,6 +110,11 @@ const styles = StyleSheet.create({
     fontSize: normalizeFontSize(28),
     fontWeight: 'bold',
   },
+  divider: {
+    borderBottomColor: colors.border,
+    borderBottomWidth: 0.5,
+    marginTop: 5,
+},
 });
 
 export default MetricsCard;
