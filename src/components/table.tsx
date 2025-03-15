@@ -163,12 +163,12 @@ const pickerRef : any = useRef();
                     <View style={styles.modalRow}>
                         <View>
                             <Text style={styles.label}>From</Text>
-                            <Text style={styles.data}>{selectedItem.start_time}</Text>
+                            <Text style={styles.data}>{new Date(selectedItem.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</Text>
                         </View>
 
                         <View>
                             <Text style={styles.label}>To</Text>
-                            <Text style={styles.data}>{selectedItem.end_time}</Text>
+                            <Text style={styles.data}>{new Date(selectedItem.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</Text>
                         </View>
                     </View>
 
@@ -190,7 +190,7 @@ const pickerRef : any = useRef();
                     </View>
                     </View>
                     <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.deleteButton} onPress={() => {deleteSingleTask(selectedItem.id); setModalVisible(false)}}>    
+                <TouchableOpacity style={styles.deleteButton} onPress={() => {deleteSingleTask(selectedItem.id); setModalVisible(false); showToast('success','Task deleted successfully',2000)}}>    
                         <Text style={{color:'white'}}>Delete</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.closeModal} onPress={()=>{handleEdit();addTask(selectedItem?.id,selectedItem?.date,selectedItem?.percentage,selectedItem?.title,selectedItem?.duration,selectedItem?.tag,selectedItem?.start_time,selectedItem?.end_time)
