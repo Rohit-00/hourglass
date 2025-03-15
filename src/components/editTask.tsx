@@ -109,7 +109,7 @@ export const EditTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomS
     >
       {({ handleChange, handleSubmit, setFieldValue, values, errors, touched, isValid }) => (
         <View style={styles.container}>
-          <Text style={styles.heading}>Add Task</Text>
+          <Text style={styles.heading}>Edit Task</Text>
 
           <View style={styles.inputContainer}>
             <TextInput
@@ -250,7 +250,7 @@ export const EditTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomS
               style={[styles.updateButton]}
               onPress={() => handleSubmit()}
             >
-              <Text style={{ color: 'white' }}>Add</Text>
+              <Text style={{ color: 'white' }}>Update</Text>
             </TouchableOpacity>
           </View>
         </View>
