@@ -82,8 +82,8 @@ export const AddTask: React.FC<ChildProps> = ({ bottomSheetModalRef, setBottomSh
         difference.toString(),
         values.percentage,
         values.moodValue,
-        values.startTime.toLocaleTimeString(),
-        values.endTime.toLocaleTimeString()
+        values.startTime.toString(),
+        values.endTime.toString()
       );
       showToast('success', 'Successfully Added Task');
     } catch (error) {

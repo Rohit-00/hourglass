@@ -110,7 +110,7 @@ android/.settings/
 android/.externalNativeBuild/
 android/gradle.properties
 android/captures/
-
+/android
 # Environment variables & secrets
 .env
 .env.*
