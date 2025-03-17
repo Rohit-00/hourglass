@@ -5,7 +5,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 
 import { convertToTimeDuration } from '../../utils/dateHelpers';
 import { getYesterdayTasks } from '../../database';
-import { normalizeFontSize } from '../../utils/helpers';
+import { normalizeFontSize, truncateText } from '../../utils/helpers';
 
 const theme = Appearance.getColorScheme()
 const YesterdayTable = () => {
@@ -41,7 +41,7 @@ const YesterdayTable = () => {
                                 : item.tag === 'neutral' ? 'grey' 
                                 : '#E05E5E'
                         }]} />
-                        <Text style={styles.titleText}>{item.title}</Text>
+                        <Text style={styles.titleText}>{truncateText(item.title,23)}</Text>
                     </View>
                     <View style={styles.durationColumn}>
                         <Text style={styles.cellText}>{convertToTimeDuration(item.duration)}</Text>
