@@ -78,12 +78,12 @@ const YesterdayTable = () => {
                         <View style={styles.modalRow}>
                             <View>
                                 <Text style={styles.label}>From</Text>
-                                <Text style={styles.data}>{selectedItem.start_time}</Text>
+                                <Text style={styles.data}>{new Date(selectedItem.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</Text>
                             </View>
     
                             <View>
                                 <Text style={styles.label}>To</Text>
-                                <Text style={styles.data}>{selectedItem.end_time}</Text>
+                                <Text style={styles.data}>{new Date(selectedItem.end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</Text>
                             </View>
                         </View>
     
