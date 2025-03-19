@@ -1,4 +1,9 @@
 
+# Hourglass
+
+A daily journal app that gives detailed insight on your daily activities.
+
+
 
 ![Screenshot](https://play-lh.googleusercontent.com/q76i6W3RctrTcV8VTnjQbG8EQnfzAOW29iXFI9BAP9rzog7EcrsfcRJ4V9AU1QkpGhw=w526-h296-rw)
 
